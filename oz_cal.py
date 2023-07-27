@@ -105,7 +105,7 @@ if __name__ == "__main__":
     <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-    <iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=13&l=ur1&category=jpprimeday&banner=06P0BQNN9DVFAVN7FG82&f=ifr&linkID=d3722f5381ac4fcf5ba53622f1674ca2&t=takishun03-22&tracking_id=takishun03-22" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
+    <iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=48&l=ur1&category=echoauto&banner=0VQAXFW9622P0NK7V382&f=ifr&linkID=fcb2e50250a1f550d4dc6f5b00efa39a&t=takishun03-22&tracking_id=takishun03-22" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
     </body>
     </html> 
         """,
