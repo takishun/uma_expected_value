@@ -35,6 +35,27 @@ def umatan(bet,horces,number):
 def wide(bet,horces,number):
     return bet*number*perm(3,2)/comb(horces,2)
 
+def tanshou_prob(horces,number):
+    return bet/horces*number
+
+def hukushou_prob(horces,number):
+    return 100*3/horces*number
+
+def sanrentan_prob(horces,number):
+    return 100*number/perm(horces,3)
+
+def sanrenpuku_prob(horces,number):
+    return 100*number/comb(horces,3)
+
+def umaren_prob(horces,number):
+    return 100*number/comb(horces,2)
+
+def umatan_prob(horces,number):
+    return 100*number/perm(horces,2)
+
+def wide_prob(horces,number):
+    return 100*number*perm(3,2)/comb(horces,2)
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -49,13 +70,19 @@ if __name__ == "__main__":
     st.text('※単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものになります。※')
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
     
+    st.subheader('更新内容')
+    st.text('''
+    2023/09/17 確率表示を追加。
+    ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
+    ''')
+    st.write('---')
     pub1,pub2,pub3 = st.columns(3)
     with pub1:
         stc.html('''
-        <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3UQ4L6+1JS2+IFD69" rel="nofollow">
-        <img border="0" width="125" height="125" alt="" src="https://www23.a8.net/svt/bgt?aid=230702425233&wid=006&eno=01&mid=s00000007229003095000&mc=1"></a>
-        <img border="0" width="1" height="1" src="https://www11.a8.net/0.gif?a8mat=3TCR4P+3UQ4L6+1JS2+IFD69" alt="">
-        ''',height=130)
+        <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+C03K1" rel="nofollow">
+        <img border="0" width="200" height="125" alt="" src="https://www26.a8.net/svt/bgt?aid=230702425228&wid=006&eno=01&mid=s00000005917002016000&mc=1"></a>
+        <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">''',
+                 height=130)
         
         st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3UQ4L6+1JS2+HWPVM" rel="nofollow">100円で最高6億円！！【オッズパークLOTO】</a><img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=3TCR4P+3UQ4L6+1JS2+HWPVM" alt="">',unsafe_allow_html=True) 
         
@@ -81,34 +108,56 @@ if __name__ == "__main__":
     st.subheader('単勝、複勝期待値')
     col1, col2 = st.columns(2)
     col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
+    col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
+    
     col2.metric(label='複勝期待値', value = round(hukushou_cal(bet,horces,number),2),delta = round(hukushou_cal(bet,horces,number)-bet,2))
+    col2.write('確率　'+str(round(hukushou_prob(horces,number),2))+'%')
     
     #三連単、三連複
     st.subheader('三連単、三連複期待値')
     col3,col4 = st.columns(2)
     col3.metric(label='三連単期待値', value = round(sanrentan(bet,horces,number),2),delta = round(sanrentan(bet,horces,number)-bet,2))
+    col3.write('確率　'+str(round(sanrentan_prob(horces,number),2))+'%')
+    
     col4.metric(label='三連複期待値', value = round(sanrenpuku(bet,horces,number),2),delta = round(sanrenpuku(bet,horces,number)-bet,2))
-        
+    col4.write('確率　'+str(round(sanrenpuku_prob(horces,number),2))+'%')
+               
     #馬単、馬連、ワイド
     st.subheader('馬単、馬連、ワイド期待値')
     col5,col6,col7 = st.columns(3)
     col5.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
-    col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
-    col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
+    col5.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')    
     
+    col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
+    col6.write('確率　'+str(round(umaren_prob(horces,number),2))+'%')    
+    
+    col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
+    col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')    
     st.write('---')
-    stc.html(
+    fpub1,fpub2,fpub3 = st.columns(3)
+    with fpub1:
+        stc.html(
+            """
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0C5QJ62D9&linkId=975a3db0015cb4a15ae63b4bb02fb730"></iframe>
+            """,
+            height=250,
+        )
+        
+    with fpub2:
+        stc.html(
         """
-    <!DOCTYPE html>
-    <html>
-    <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-    <body>
-    <iframe src="https://rcm-fe.amazon-adsystem.com/e/cm?o=9&p=48&l=ur1&category=echoauto&banner=0VQAXFW9622P0NK7V382&f=ifr&linkID=fcb2e50250a1f550d4dc6f5b00efa39a&t=takishun03-22&tracking_id=takishun03-22" width="728" height="90" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0" sandbox="allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe>
-    </body>
-    </html> 
+        <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07KS1YY9P&linkId=a6e95646c6d4d4df7d355dc042f4839f"></iframe>
         """,
-        height=90,
-    )
+        height=250,
+        )
+        
+    with fpub3:
+        stc.html(
+            """
+            <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B08YC7HLJ8&linkId=899f2daa66c3d4426a0380210d45c455"></iframe>
+            """,
+        height=250,
+        )
+        
+ 
 
