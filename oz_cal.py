@@ -161,5 +161,20 @@ if __name__ == "__main__":
         height=250,
         )
         
+    stc.html("""
+    <body>
+    <!-- admax -->
+    <script src="https://adm.shinobi.jp/s/6658c80bd06583e1574c8c92c085b252"></script>
+    <!-- admax -->
+    </body>
+    """,height=100)
+    
+    stc.html("""
+    <body>
+    <!-- admax -->
+    <script src="https://adm.shinobi.jp/s/45435edce7e7017f98344e0a9b71123c"></script>
+    <!-- admax -->
+    </body>
+    """,height=60)
  
 
