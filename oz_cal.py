@@ -83,7 +83,8 @@ if __name__ == "__main__":
     with fpub1:
         stc.html(
             """
-            <a target="_blank" href="https://www.amazon.co.jp/gp/search?ie=UTF8&tag=takishun03-22&linkCode=ur2&linkId=8810f868b411136dd70f5a0e02836e9a&camp=247&creative=1211&index=aps&keywords=ウマ娘">ウマ娘</a>
+            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ctsmatch";rakuten_genreId="0";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
+            <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
             """,
             height=250,
         )
