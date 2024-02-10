@@ -165,6 +165,11 @@ if __name__ == "__main__":
     col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
     col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
     st.write('---')
+    st.text('作成者:eta')
+    st.text('お問い合わせは下記まで')
+    st.markdown('<a href = "https://twitter.com/Psylibia_">Twitter</a>',unsafe_allow_html=True)
+    st.text('e-mail:shun.takinami.cr*gmail.com')
+    st.text('「*」を[@]に読み換えてください。')
     #
     # stc.html("""
     # <body>
