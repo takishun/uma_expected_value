@@ -72,34 +72,61 @@ if __name__ == "__main__":
     st.subheader('更新内容')
 
     st.text('''
-    2023/09/17 確率表示を追加。
+    2024/02/10 広告掲載変更。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
     ''')
 
     st.write('---')
-    pub1,pub2,pub3 = st.columns(3)
-    with pub1:
-        stc.html('''
-        <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+C03K1" rel="nofollow">
-        <img border="0" width="200" height="125" alt="" src="https://www26.a8.net/svt/bgt?aid=230702425228&wid=006&eno=01&mid=s00000005917002016000&mc=1"></a>
-        <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">''',
-        height=130)
-        st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+BY642" rel="nofollow">【楽天競馬】が【楽天銀行（旧イーバンク銀行）】でご利用可能に！</a><img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+BY642" alt="">',unsafe_allow_html=True)
 
-    with pub2:
-        stc.html("""
-        <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" rel="nofollow">
-        <img border="0" width="125" height="125" alt="" src="https://www24.a8.net/svt/bgt?aid=230702425230&wid=006&eno=01&mid=s00000007229001127000&mc=1"></a>
-        <img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" alt="">        """,
-        height=130)
-        st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" rel="nofollow">携帯電話でも地方競馬の馬券購入OK！</a><img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" alt="">',unsafe_allow_html=True)
+    fpub1,fpub2,fpub3 = st.columns(3)
 
-    with pub3:
-        stc.html("""
-        <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" rel="nofollow">
-        <img border="0" width="125" height="125" alt="" src="https://www28.a8.net/svt/bgt?aid=230702425480&wid=006&eno=01&mid=s00000008685003005000&mc=1"></a>
-        <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" alt="">""",height = 130)
-        st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" rel="nofollow">無料で勝馬予想！ <br>穴馬券を当てる！</a><img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" alt="">',unsafe_allow_html=True)
+    with fpub1:
+        stc.html(
+            """
+            <a target="_blank" href="https://www.amazon.co.jp/gp/search?ie=UTF8&tag=takishun03-22&linkCode=ur2&linkId=8810f868b411136dd70f5a0e02836e9a&camp=247&creative=1211&index=aps&keywords=ウマ娘">ウマ娘</a>
+            """,
+            height=250,
+        )
+
+    with fpub2:
+        stc.html(
+            """
+            <a target="_blank" href="https://www.amazon.co.jp/gp/search?ie=UTF8&tag=takishun03-22&linkCode=ur2&linkId=60f2613b2f2a66866de7f3ded9f12547&camp=247&creative=1211&index=aps&keywords=競馬">競馬</a>
+            """,
+        height=250,
+        )
+
+    with fpub3:
+        stc.html(
+            """
+            <a target="_blank" href="https://www.amazon.co.jp/gp/search?ie=UTF8&tag=takishun03-22&linkCode=ur2&linkId=771c5c556c0a605e746208aa6bbe231d&camp=247&creative=1211&index=aps&keywords=幸運グッズ　競馬">幸運グッズ　競馬</a>
+            """,
+        height=250,
+        )
+
+    # pub1,pub2,pub3 = st.columns(3)
+    # with pub1:
+    #     stc.html('''
+    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+C03K1" rel="nofollow">
+    #     <img border="0" width="200" height="125" alt="" src="https://www26.a8.net/svt/bgt?aid=230702425228&wid=006&eno=01&mid=s00000005917002016000&mc=1"></a>
+    #     <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">''',
+    #     height=130)
+    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+BY642" rel="nofollow">【楽天競馬】が【楽天銀行（旧イーバンク銀行）】でご利用可能に！</a><img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+BY642" alt="">',unsafe_allow_html=True)
+    #
+    # with pub2:
+    #     stc.html("""
+    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" rel="nofollow">
+    #     <img border="0" width="125" height="125" alt="" src="https://www24.a8.net/svt/bgt?aid=230702425230&wid=006&eno=01&mid=s00000007229001127000&mc=1"></a>
+    #     <img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" alt="">        """,
+    #     height=130)
+    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" rel="nofollow">携帯電話でも地方競馬の馬券購入OK！</a><img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" alt="">',unsafe_allow_html=True)
+    #
+    # with pub3:
+    #     stc.html("""
+    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" rel="nofollow">
+    #     <img border="0" width="125" height="125" alt="" src="https://www28.a8.net/svt/bgt?aid=230702425480&wid=006&eno=01&mid=s00000008685003005000&mc=1"></a>
+    #     <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" alt="">""",height = 130)
+    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" rel="nofollow">無料で勝馬予想！ <br>穴馬券を当てる！</a><img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" alt="">',unsafe_allow_html=True)
 
     number = st.number_input('オッズ',value = 1.00)
     horces = st.number_input('馬数',format='%d',value=18,min_value=1,max_value=18)
@@ -135,31 +162,6 @@ if __name__ == "__main__":
     col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
     col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
     st.write('---')
-    # fpub1,fpub2,fpub3 = st.columns(3)
-    #
-    # with fpub1:
-    #     stc.html(
-    #         """
-    #         <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0C5QJ62D9&linkId=975a3db0015cb4a15ae63b4bb02fb730"></iframe>
-    #         """,
-    #         height=250,
-    #     )
-    #
-    # with fpub2:
-    #     stc.html(
-    #     """
-    #     <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B07KS1YY9P&linkId=a6e95646c6d4d4df7d355dc042f4839f"></iframe>
-    #     """,
-    #     height=250,
-    #     )
-    #
-    # with fpub3:
-    #     stc.html(
-    #         """
-    #         <iframe sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin" style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=takishun03-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B08YC7HLJ8&linkId=899f2daa66c3d4426a0380210d45c455"></iframe>
-    #         """,
-    #     height=250,
-    #     )
     #
     # stc.html("""
     # <body>
