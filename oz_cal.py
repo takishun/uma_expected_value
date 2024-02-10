@@ -91,8 +91,9 @@ if __name__ == "__main__":
 
     with fpub2:
         stc.html(
-            """<table cellpadding="0" cellspacing="0" border="0" style=" border:1px solid #ccc; width:300px;"><tbody><tr style="border-style:none;"><td style="vertical-align:top; border-style:none; padding:10px; width:44px;"><a href="https://rpx.a8.net/svt/ejp?a8mat=3N237F+FM1BP6+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q0724.2bo11c45.g00q0724.2bo12179%2Fa22012721403_3N237F_FM1BP6_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fbook%252F17658846%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fbook%252Fi%252F21088017%252F" rel="nofollow"><img border="0" alt="" src="https://thumbnail.image.rakuten.co.jp/@0_mall/book/cabinet/5462/2100013555462_1_3.jpg?_ex=64x64" /></a></td><td style="font-size:12px; vertical-align:middle; border-style:none; padding:10px;"><p style="padding:0; margin:0;"><a href="https://rpx.a8.net/svt/ejp?a8mat=3N237F+FM1BP6+2HOM+BWGDT&rakuten=y&a8ejpredirect=https%3A%2F%2Fhb.afl.rakuten.co.jp%2Fhgc%2Fg00q0724.2bo11c45.g00q0724.2bo12179%2Fa22012721403_3N237F_FM1BP6_2HOM_BWGDT%3Fpc%3Dhttps%253A%252F%252Fitem.rakuten.co.jp%252Fbook%252F17658846%252F%26amp%3Bm%3Dhttp%253A%252F%252Fm.rakuten.co.jp%252Fbook%252Fi%252F21088017%252F" rel="nofollow">【楽天ブックス限定全巻購入特典】『ウマ箱3』第3コーナー(アニメ「ウマ娘 プリティーダービー Season 3」トレーナーズBOX)【Blu-ray】(オリジナルキャンバスアート キタサンブラック＆ナイスネイチャ(雑誌版権イラスト使用)) [ Cygames ]</a></p><p style="color:#666; margin-top:5px line-height:1.5;">価格:<span style="font-size:14px; color:#C00; font-weight:bold;">9790円</span><br/><span style="font-size:10px; font-weight:normal;">(2024/2/10 12:00時点)</span><br/><span style="font-weight:bold;">感想(0件)</span></p></td></tr></tbody></table>
-            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BWGDT" alt="">
+            """
+            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="568591";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
+            <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
             """,
         height=250,
         )
@@ -100,7 +101,8 @@ if __name__ == "__main__":
     with fpub3:
         stc.html(
             """
-            <a target="_blank" href="https://www.amazon.co.jp/gp/search?ie=UTF8&tag=takishun03-22&linkCode=ur2&linkId=771c5c556c0a605e746208aa6bbe231d&camp=247&creative=1211&index=aps&keywords=幸運グッズ　競馬">幸運グッズ　競馬</a>
+            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="402486";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
+            <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
             """,
         height=250,
         )
