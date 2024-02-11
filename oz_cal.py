@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
-
-
 import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
@@ -60,7 +57,8 @@ if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
         page_icon="uma_icon.png",
-        initial_sidebar_state="expanded"
+        initial_sidebar_state="expanded",
+        layout="wide"
     )
 
     st.title('競馬期待値計算機')
