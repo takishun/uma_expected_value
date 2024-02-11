@@ -136,6 +136,7 @@ if __name__ == "__main__":
     st.write('---')
     # st.subheader('単勝、複勝期待値')
     col1, col2 = st.columns(2)
+    col1.subheader('単勝')
     col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
     col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
 
