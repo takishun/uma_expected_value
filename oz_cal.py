@@ -10,6 +10,7 @@ import streamlit as st
 from scipy.special import comb
 from scipy.special import perm
 import streamlit.components.v1 as stc
+import streamlit_calendar as st_calendar
 
 def tanshou_cal(bet,horces,number):
     return bet/horces*number
@@ -60,9 +61,7 @@ if __name__ == "__main__":
         initial_sidebar_state="expanded",
         layout="wide"
     )
-
-    st.sidebar.markdown('<a href = "https://www.jra.go.jp/keiba/calendar/">競馬スケジュール</a>',unsafe_allow_html=True)
-
+    st.sidebar.st_calendar.calendar()
 
     st.title('競馬期待値計算機')
     st.text('オッズ、出馬数、掛け金を入力して競馬の掛け方別の期待値を計算してくれます。')
