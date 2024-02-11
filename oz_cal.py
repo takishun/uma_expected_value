@@ -162,7 +162,7 @@ if __name__ == "__main__":
     col5.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
     col5.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')
 
-    col6.subheader('馬蓮')
+    col6.subheader('馬連')
     col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
     col6.write('確率　'+str(round(umaren_prob(horces,number),2))+'%')
 
