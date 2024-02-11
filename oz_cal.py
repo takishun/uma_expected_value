@@ -142,7 +142,7 @@ if __name__ == "__main__":
     col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
     col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
 
-    ccol2.subheader('複勝')
+    col2.subheader('複勝')
     col2.metric(label='複勝期待値', value = round(hukushou_cal(bet,horces,number),2),delta = round(hukushou_cal(bet,horces,number)-bet,2))
     col2.write('確率　'+str(round(hukushou_prob(horces,number),2))+'%')
 
