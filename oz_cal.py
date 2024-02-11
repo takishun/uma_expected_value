@@ -61,6 +61,9 @@ if __name__ == "__main__":
         layout="wide"
     )
 
+    st.sidebar.markdown('<a href = "https://www.jra.go.jp/keiba/calendar/">競馬スケジュール</a>',unsafe_allow_html=True)
+
+
     st.title('競馬期待値計算機')
     st.text('オッズ、出馬数、掛け金を入力して競馬の掛け方別の期待値を計算してくれます。')
     st.text('期待値の下には掛け金と期待値の差を表示します。')
@@ -70,7 +73,7 @@ if __name__ == "__main__":
     st.subheader('更新内容')
 
     st.text('''
-    2024/02/10 広告掲載変更。
+    2024/02/11 レイアウト変更。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
     ''')
 
@@ -134,35 +137,42 @@ if __name__ == "__main__":
     bet = st.number_input('掛け金',format='%d',value=100,min_value=0)
 
     st.write('---')
-    st.subheader('単勝、複勝期待値')
+    # st.subheader('単勝、複勝期待値')
     col1, col2 = st.columns(2)
     col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
     col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
 
+    ccol2.subheader('複勝')
     col2.metric(label='複勝期待値', value = round(hukushou_cal(bet,horces,number),2),delta = round(hukushou_cal(bet,horces,number)-bet,2))
     col2.write('確率　'+str(round(hukushou_prob(horces,number),2))+'%')
 
     #三連単、三連複
-    st.subheader('三連単、三連複期待値')
+    # st.subheader('三連単、三連複期待値')
     col3,col4 = st.columns(2)
+    col3.subheader('三連単')
     col3.metric(label='三連単期待値', value = round(sanrentan(bet,horces,number),2),delta = round(sanrentan(bet,horces,number)-bet,2))
     col3.write('確率　'+str(round(sanrentan_prob(horces,number),2))+'%')
 
+    col4.subheader('三連複')
     col4.metric(label='三連複期待値', value = round(sanrenpuku(bet,horces,number),2),delta = round(sanrenpuku(bet,horces,number)-bet,2))
     col4.write('確率　'+str(round(sanrenpuku_prob(horces,number),2))+'%')
 
     #馬単、馬連、ワイド
-    st.subheader('馬単、馬連、ワイド期待値')
+    # st.subheader('馬単、馬連、ワイド期待値')
     col5,col6,col7 = st.columns(3)
+    col5.subheader('馬単')
     col5.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
     col5.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')
 
+    col6.subheader('馬蓮')
     col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
     col6.write('確率　'+str(round(umaren_prob(horces,number),2))+'%')
 
+    col7.subheader('ワイド')
     col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
     col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
     st.write('---')
+
     st.text('作成者:eta')
     st.text('お問い合わせは下記まで')
     st.markdown('<a href = "https://twitter.com/Psylibia_">Twitter</a>',unsafe_allow_html=True)
