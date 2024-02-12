@@ -107,11 +107,7 @@ if __name__ == "__main__":
         height=250,
         )
 
-    stc.html("""
-    <html>
-    <a href="https://www.amazon.co.jp/kindle-dbs/hz/subscribe/ku?_encoding=UTF8&shoppingPortalEnabled=true&linkCode=ll2&tag=takishun03-22&linkId=49da0ba3772cf385124a7049e2305ab8&language=ja_JP&ref_=as_li_ss_tl">Kindle Unlimited</a>
-    </html>
-    """)
+
     # pub1,pub2,pub3 = st.columns(3)
     # with pub1:
     #     stc.html('''
@@ -183,6 +179,12 @@ if __name__ == "__main__":
     st.markdown('<a href = "https://twitter.com/Psylibia_">Twitter</a>',unsafe_allow_html=True)
     st.text('e-mail:shun.takinami.cr*gmail.com')
     st.text('「*」を[@]に読み換えてください。')
+
+    stc.html("""
+    <html>
+    <a href="https://www.amazon.co.jp/kindle-dbs/hz/subscribe/ku?_encoding=UTF8&shoppingPortalEnabled=true&linkCode=ll2&tag=takishun03-22&linkId=49da0ba3772cf385124a7049e2305ab8&language=ja_JP&ref_=as_li_ss_tl">Kindle Unlimited</a>
+    </html>
+    """)
     #
     # stc.html("""
     # <body>
