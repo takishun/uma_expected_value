@@ -75,9 +75,7 @@ if __name__ == "__main__":
     ''')
 
     st.markdown('<a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
-    stc.html("""
-    https://www.amazon.co.jp/kindle-dbs/hz/subscribe/ku?_encoding=UTF8&shoppingPortalEnabled=true&linkCode=ll2&tag=takishun03-22&linkId=49da0ba3772cf385124a7049e2305ab8&language=ja_JP&ref_=as_li_ss_tl
-    """)
+
     st.write('---')
 
     fpub1,fpub2,fpub3 = st.columns(3)
@@ -108,7 +106,10 @@ if __name__ == "__main__":
             """,
         height=250,
         )
-
+        
+    stc.html("""
+    <a href="https://www.amazon.co.jp/kindle-dbs/hz/subscribe/ku?_encoding=UTF8&shoppingPortalEnabled=true&linkCode=ll2&tag=takishun03-22&linkId=49da0ba3772cf385124a7049e2305ab8&language=ja_JP&ref_=as_li_ss_tl"><img src="amazon_ku.jpg" alt="amazon kindle unlimited"></a>
+    """)
     # pub1,pub2,pub3 = st.columns(3)
     # with pub1:
     #     stc.html('''
