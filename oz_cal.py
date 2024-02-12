@@ -74,9 +74,7 @@ if __name__ == "__main__":
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
     ''')
 
-    st.html("""
-    <a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>
-    """,height=15)
+    st.markdown('<a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
 
     st.write('---')
 
