@@ -182,11 +182,9 @@ if __name__ == "__main__":
     st.text('「*」を[@]に読み換えてください。')
 
     stc.html("""
-    <html>
     <a href="https://px.a8.net/svt/ejp?a8mat=3N237F+FMMRAY+1WP2+63H8H" rel="nofollow">
     <img border="0" width="468" height="60" alt="" src="https://www22.a8.net/svt/bgt?aid=220127163945&wid=006&eno=01&mid=s00000008903001024000&mc=1"></a>
     <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3N237F+FMMRAY+1WP2+63H8H" alt="">
-    </html>
     """)
     #
     # stc.html("""
