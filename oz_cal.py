@@ -72,6 +72,7 @@ if __name__ == "__main__":
     st.text('''
     2024/02/11 レイアウト変更。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
+
     ''')
 
     st.markdown('<a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
@@ -182,7 +183,9 @@ if __name__ == "__main__":
 
     stc.html("""
     <html>
-    <a href="https://www.amazon.co.jp/kindle-dbs/hz/subscribe/ku?_encoding=UTF8&shoppingPortalEnabled=true&linkCode=ll2&tag=takishun03-22&linkId=49da0ba3772cf385124a7049e2305ab8&language=ja_JP&ref_=as_li_ss_tl">Kindle Unlimited</a>
+    <a href="https://px.a8.net/svt/ejp?a8mat=3N237F+FMMRAY+1WP2+63H8H" rel="nofollow">
+    <img border="0" width="468" height="60" alt="" src="https://www22.a8.net/svt/bgt?aid=220127163945&wid=006&eno=01&mid=s00000008903001024000&mc=1"></a>
+    <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3N237F+FMMRAY+1WP2+63H8H" alt="">
     </html>
     """)
     #
