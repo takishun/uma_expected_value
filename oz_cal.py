@@ -73,8 +73,15 @@ if __name__ == "__main__":
     2024/02/11 レイアウト変更。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
 
+    2月注目レース
+    東京	2月17日土曜　ダイヤモンドS　GⅢ
+    京都	2月17日土曜　京都牝馬ステークス　GⅢ
+    東京	2月18日日曜　フェブラリーS　GⅠ
+    小倉	2月18日日曜　小倉大賞典　GⅢ
+    海外	2月25日日曜　サウジカップ　G1
     ''')
 
+    st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
     st.markdown('<a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
 
     st.write('---')
