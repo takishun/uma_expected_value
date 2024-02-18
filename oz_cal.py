@@ -70,15 +70,13 @@ if __name__ == "__main__":
     st.subheader('更新内容')
 
     st.text('''
-    2024/02/11 レイアウト変更。
+    2024/02/18 レイアウト変更、注目レース更新。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
 
-    2月注目レース
-    東京	2月17日土曜　ダイヤモンドS　GⅢ
-    京都	2月17日土曜　京都牝馬ステークス　GⅢ
-    東京	2月18日日曜　フェブラリーS　GⅠ
-    小倉	2月18日日曜　小倉大賞典　GⅢ
-    海外	2月25日日曜　サウジカップ　G1
+    注目レース
+    中山　2月25日日曜　中山記念　G2
+    阪神　2月25日日曜　阪急杯　G3
+    海外　2月25日日曜　サウジカップ　G1
     ''')
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
@@ -146,7 +144,7 @@ if __name__ == "__main__":
 
     st.write('---')
     # st.subheader('単勝、複勝期待値')
-    col1, col2 = st.columns(2)
+    col1, col2, colex = st.columns(3)
     col1.subheader('単勝')
     col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
     col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
@@ -157,7 +155,7 @@ if __name__ == "__main__":
 
     #三連単、三連複
     # st.subheader('三連単、三連複期待値')
-    col3,col4 = st.columns(2)
+    col3,col4,colex2 = st.columns(3)
     col3.subheader('三連単')
     col3.metric(label='三連単期待値', value = round(sanrentan(bet,horces,number),2),delta = round(sanrentan(bet,horces,number)-bet,2))
     col3.write('確率　'+str(round(sanrentan_prob(horces,number),2))+'%')
