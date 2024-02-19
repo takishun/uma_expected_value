@@ -21,10 +21,10 @@ def sanrentan(bet,horces,number):
     return bet*number/perm(horces,3)
 
 def sanrenpuku(bet,horces,number):
-    return bet*number/comb(horces,3)
+    return bet*number*6./perm(horces,3)
 
 def umaren(bet,horces,number):
-    return bet*number/comb(horces,2)
+    return bet*number*2./perm(horces,2)
 
 def umatan(bet,horces,number):
     return bet*number/perm(horces,2)
@@ -42,10 +42,10 @@ def sanrentan_prob(horces,number):
     return 100/perm(horces,3)
 
 def sanrenpuku_prob(horces,number):
-    return 100*6/comb(horces,3)
+    return 100/comb(horces,3)
 
 def umaren_prob(horces,number):
-    return 100*2/comb(horces,2)
+    return 100/comb(horces,2)
 
 def umatan_prob(horces,number):
     return 100/perm(horces,2)
