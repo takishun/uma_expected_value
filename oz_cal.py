@@ -33,25 +33,25 @@ def wide(bet,horces,number):
     return bet*number*perm(3,2)/comb(horces,2)
 
 def tanshou_prob(horces,number):
-    return bet/horces*number
+    return 100/horces*number
 
 def hukushou_prob(horces,number):
     return 100*3/horces*number
 
 def sanrentan_prob(horces,number):
-    return 100*number/perm(horces,3)
+    return 100/perm(horces,3)
 
 def sanrenpuku_prob(horces,number):
-    return 100*number/comb(horces,3)
+    return 100*6/comb(horces,3)
 
 def umaren_prob(horces,number):
-    return 100*number/comb(horces,2)
+    return 100*2/comb(horces,2)
 
 def umatan_prob(horces,number):
-    return 100*number/perm(horces,2)
+    return 100/perm(horces,2)
 
 def wide_prob(horces,number):
-    return 100*number*perm(3,2)/comb(horces,2)
+    return 100*perm(3,2)/comb(horces,2)
 
 if __name__ == "__main__":
     st.set_page_config(
