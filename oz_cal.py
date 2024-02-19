@@ -33,10 +33,10 @@ def wide(bet,horces,number):
     return bet*number*perm(3,2)/comb(horces,2)
 
 def tanshou_prob(horces,number):
-    return 100/horces*number
+    return 100/horces
 
 def hukushou_prob(horces,number):
-    return 100*3/horces*number
+    return 100*3/horces
 
 def sanrentan_prob(horces,number):
     return 100/perm(horces,3)
