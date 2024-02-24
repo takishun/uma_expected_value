@@ -107,8 +107,9 @@ if __name__ == "__main__":
     with fpub3:
         stc.html(
             """
-            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="402486";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
-            <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
+            <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+C03K1" rel="nofollow">
+            <img border="0" width="300" height="250" alt="" src="https://www22.a8.net/svt/bgt?aid=230702425228&wid=006&eno=01&mid=s00000005917002016000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">
             """,
         height=250,
         )
@@ -187,9 +188,9 @@ if __name__ == "__main__":
     st.text('「*」を[@]に読み換えてください。')
 
     stc.html("""
-    <a href="https://px.a8.net/svt/ejp?a8mat=3N237F+FMMRAY+1WP2+63H8H" rel="nofollow">
-    <img border="0" width="468" height="60" alt="" src="https://www22.a8.net/svt/bgt?aid=220127163945&wid=006&eno=01&mid=s00000008903001024000&mc=1"></a>
-    <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3N237F+FMMRAY+1WP2+63H8H" alt="">
+    <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7YZ27U+47AY+601S1" rel="nofollow">
+    <img border="0" width="300" height="250" alt="" src="https://www29.a8.net/svt/bgt?aid=230702425482&wid=006&eno=01&mid=s00000019609001008000&mc=1"></a>
+    <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=3TCR4P+7YZ27U+47AY+601S1" alt="">
     """)
     #
     # stc.html("""
