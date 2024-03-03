@@ -80,7 +80,7 @@ if __name__ == "__main__":
     ''')
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
-    st.markdown('<a target="_blank" href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=takishun03-22&linkCode=ur2&linkId=04e82a63ad6ac58573beef170b28ea33&camp=247&creative=1211&node=2757455051">アニメ見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
+    st.markdown('<a target="_blank" href="https://www.amazon.co.jp/cer/c/0e2d2e7a">AmazonPrime</a>',unsafe_allow_html=True)
 
     st.write('---')
 
