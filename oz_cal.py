@@ -74,7 +74,7 @@ if __name__ == "__main__":
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
 
     注目レース
-    東京	5月19日日曜 オークス GⅠ
+    東京	5月26日日曜 日本優駿 GⅠ
     ''')
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
