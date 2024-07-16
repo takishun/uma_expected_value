@@ -73,9 +73,6 @@ if __name__ == "__main__":
     2024/02/20 確率計算関数の修正。
     ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
 
-    注目レース
-    福島 6月30日日曜 ラジオNIKKEI賞GⅢ
-    小倉 6月30日日曜 TV西日本北九州記念GⅢ
     ''')
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
