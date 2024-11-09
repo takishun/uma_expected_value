@@ -53,6 +53,12 @@ def umatan_prob(horces,number):
 def wide_prob(horces,number):
     return 100*perm(3,2)/comb(horces,2)
 
+def memo_baken():
+    pass
+
+def wakuren():
+    return 100/comb(9,2)
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -70,8 +76,7 @@ if __name__ == "__main__":
     st.subheader('更新内容')
 
     st.text('''
-    2024/02/20 確率計算関数の修正。
-    ※確率値は単純に出走馬数から場合の数を計算した値になります。馬場や個々の馬の調子、能力は考慮されていません。
+    2024/11/09 枠連計算機能の追加
 
     ''')
 
@@ -130,12 +135,16 @@ if __name__ == "__main__":
     col4.metric(label='三連複期待値', value = round(sanrenpuku(bet,horces,number),2),delta = round(sanrenpuku(bet,horces,number)-bet,2))
     col4.write('確率　'+str(round(sanrenpuku_prob(horces,number),2))+'%')
 
+    colex2.subheader('馬単')
+    colex2.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
+    colex2.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')
+
     #馬単、馬連、ワイド
     # st.subheader('馬単、馬連、ワイド期待値')
     col5,col6,col7 = st.columns(3)
-    col5.subheader('馬単')
-    col5.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
-    col5.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')
+    col5.subheader('枠連')
+    col5.metric(label='枠連期待値', value = round(wakuren()*number*bet/100,2),delta = round(wakuren()*number*bet/100-bet,2))
+    col5.write('確率　'+str(round(wakuren(),2))+'%')
 
     col6.subheader('馬連')
     col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
@@ -144,8 +153,8 @@ if __name__ == "__main__":
     col7.subheader('ワイド')
     col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
     col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
-    st.write('---')
 
+    st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
 
     with fpub1:
