@@ -59,6 +59,12 @@ def memo_baken():
 def wakuren():
     return 100/comb(9,2)
 
+def afil():
+    pass
+
+def news():
+    pass
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -75,10 +81,9 @@ if __name__ == "__main__":
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
     st.subheader('更新内容')
 
-    st.text('''
+    st.text("""
     2024/11/09 枠連計算機能の追加
-
-    ''')
+    """)
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
     st.markdown('<a target="_blank" href="https://amzn.to/4coJX86">ウマ娘を見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
