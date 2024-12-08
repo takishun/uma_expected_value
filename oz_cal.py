@@ -87,20 +87,16 @@ def expected_value():
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
     st.subheader('更新内容')
 
-<<<<<<< Updated upstream
     st.text("""
     2024/11/09 枠連計算機能の追加
     """)
 
-=======
     st.text('''
     2024/12/08 ページレイアウト刷新
     2024/11/09 枠連計算機能の追加
-
     ''')
->>>>>>> Stashed changes
-    st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
 
+    st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
     st.write('---')
 
     number = st.number_input('オッズ',value = 1.00)
