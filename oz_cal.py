@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
+# test
 import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
@@ -53,7 +53,6 @@ def umatan_prob(horces,number):
 def wide_prob(horces,number):
     return 100*perm(3,2)/comb(horces,2)
 
-<<<<<<< Updated upstream
 def memo_baken():
     pass
 
@@ -66,17 +65,8 @@ def afil():
 def news():
     pass
 
-if __name__ == "__main__":
-    st.set_page_config(
-        page_title="競馬期待値カリキュレーター",
-        page_icon="uma_icon.png",
-        initial_sidebar_state="expanded",
-        layout="wide"
-    )
-=======
 def wakuren():
     return 100/comb(9,2)
->>>>>>> Stashed changes
 
 def expected_value():
     st.title('競馬期待値計算機')
@@ -86,10 +76,6 @@ def expected_value():
     st.text('※単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものになります。※')
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
     st.subheader('更新内容')
-
-    st.text("""
-    2024/11/09 枠連計算機能の追加
-    """)
 
     st.text('''
     2024/12/08 ページレイアウト刷新
@@ -144,7 +130,6 @@ def expected_value():
     col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
     col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
 
-<<<<<<< Updated upstream
     st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
 
@@ -177,9 +162,9 @@ def expected_value():
         )
 
     st.write('---')
-=======
+
 def footer():
->>>>>>> Stashed changes
+
     st.text('作成者:eta')
     st.text('お問い合わせは下記まで')
     st.markdown('<a href = "https://twitter.com/Psylibia_">Twitter</a>',unsafe_allow_html=True)
@@ -264,5 +249,4 @@ if __name__ == "__main__":
     with tab3:
         news()
 
-    st.write('---')
     footer()
