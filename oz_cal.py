@@ -234,7 +234,7 @@ def news():
     st.text('news')
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/keiba/thisweek/2024/1215_1/syutsuba.html">12/15 朝日杯フューチュリティステークス出馬表</a>',unsafe_allow_html=True)
 
-
+    
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
