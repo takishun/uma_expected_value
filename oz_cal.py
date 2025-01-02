@@ -234,7 +234,7 @@ def news():
     st.text('news')
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/keiba/thisweek/2024/1215_1/syutsuba.html">12/15 朝日杯フューチュリティステークス出馬表</a>',unsafe_allow_html=True)
 
-    
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -242,6 +242,11 @@ if __name__ == "__main__":
         initial_sidebar_state="expanded",
         layout="wide"
     )
+
+    stc.html('''
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6376522623125964"
+     crossorigin="anonymous"></script>
+     ''')
 
     tab1,tab2,tab3 = st.tabs(["期待値計算機","競馬で買ったらGO","馬ニュース"])
     with tab1:
