@@ -243,10 +243,7 @@ if __name__ == "__main__":
         layout="wide"
     )
 
-    stc.html('''
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6376522623125964"
-     crossorigin="anonymous"></script>
-     ''')
+    stc.html('''<meta name="google-adsense-account" content="ca-pub-6376522623125964">''')
 
     tab1,tab2,tab3 = st.tabs(["期待値計算機","競馬で買ったらGO","馬ニュース"])
     with tab1:
