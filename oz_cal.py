@@ -60,6 +60,14 @@ def wakuren():
     return 100/comb(9,2)
 
 if __name__ == "__main__":
+    stc.html(
+        """
+        <head>
+        <meta name="google-adsense-account" content="ca-pub-6376522623125964">
+        </head>
+        """,
+        height=250,
+    )
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
         page_icon="uma_icon.png",
