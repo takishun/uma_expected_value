@@ -205,19 +205,3 @@ if __name__ == "__main__":
     <img border="0" width="300" height="250" alt="" src="https://www29.a8.net/svt/bgt?aid=230702425482&wid=006&eno=01&mid=s00000019609001008000&mc=1"></a>
     <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=3TCR4P+7YZ27U+47AY+601S1" alt="">
     """)
-    #
-    # stc.html("""
-    # <body>
-    # <!-- admax -->
-    # <script src="https://adm.shinobi.jp/s/6658c80bd06583e1574c8c92c085b252"></script>
-    # <!-- admax -->
-    # </body>
-    # """,height=100)
-    #
-    # stc.html("""
-    # <body>
-    # <!-- admax -->
-    # <script src="https://adm.shinobi.jp/s/45435edce7e7017f98344e0a9b71123c"></script>
-    # <!-- admax -->
-    # </body>
-    # """,height=60)
