@@ -59,6 +59,10 @@ def memo_baken():
 def wakuren():
     return 100/comb(9,2)
 
+def news():
+    st.text('news')
+    st.markdown('<a target="_blank" href="https://www.jra.go.jp/keiba/thisweek/2024/1215_1/syutsuba.html">12/15 朝日杯フューチュリティステークス出馬表</a>',unsafe_allow_html=True)
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -225,37 +229,3 @@ def afil():
         """,
         height=250,
         )
-
-def news():
-    st.text('news')
-    st.markdown('<a target="_blank" href="https://www.jra.go.jp/keiba/thisweek/2024/1215_1/syutsuba.html">12/15 朝日杯フューチュリティステークス出馬表</a>',unsafe_allow_html=True)
-
-if __name__ == "__main__":
-    st.set_page_config(
-        page_title="競馬期待値カリキュレーター",
-        page_icon="uma_icon.png",
-        initial_sidebar_state="expanded",
-        layout="wide"
-    )
-
-    # stc.html('''<head><meta name="google-adsense-account" content="ca-pub-6376522623125964"></head>''')
-
-    expected_value()
-    afil()
-
-    #
-    # stc.html("""
-    # <body>
-    # <!-- admax -->
-    # <script src="https://adm.shinobi.jp/s/6658c80bd06583e1574c8c92c085b252"></script>
-    # <!-- admax -->
-    # </body>
-    # """,height=100)
-    #
-    # stc.html("""
-    # <body>
-    # <!-- admax -->
-    # <script src="https://adm.shinobi.jp/s/45435edce7e7017f98344e0a9b71123c"></script>
-    # <!-- admax -->
-    # </body>
-    # """,height=60)
