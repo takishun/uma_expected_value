@@ -84,30 +84,6 @@ if __name__ == "__main__":
 
     st.write('---')
 
-    # pub1,pub2,pub3 = st.columns(3)
-    # with pub1:
-    #     stc.html('''
-    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+C03K1" rel="nofollow">
-    #     <img border="0" width="200" height="125" alt="" src="https://www26.a8.net/svt/bgt?aid=230702425228&wid=006&eno=01&mid=s00000005917002016000&mc=1"></a>
-    #     <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">''',
-    #     height=130)
-    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3RQYKA+19NM+BY642" rel="nofollow">【楽天競馬】が【楽天銀行（旧イーバンク銀行）】でご利用可能に！</a><img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+BY642" alt="">',unsafe_allow_html=True)
-    #
-    # with pub2:
-    #     stc.html("""
-    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" rel="nofollow">
-    #     <img border="0" width="125" height="125" alt="" src="https://www24.a8.net/svt/bgt?aid=230702425230&wid=006&eno=01&mid=s00000007229001127000&mc=1"></a>
-    #     <img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+6PJZL" alt="">        """,
-    #     height=130)
-    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" rel="nofollow">携帯電話でも地方競馬の馬券購入OK！</a><img border="0" width="1" height="1" src="https://www16.a8.net/0.gif?a8mat=3TCR4P+3SXTRU+1JS2+5ZMCI" alt="">',unsafe_allow_html=True)
-    #
-    # with pub3:
-    #     stc.html("""
-    #     <a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" rel="nofollow">
-    #     <img border="0" width="125" height="125" alt="" src="https://www28.a8.net/svt/bgt?aid=230702425480&wid=006&eno=01&mid=s00000008685003005000&mc=1"></a>
-    #     <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HW2Q9" alt="">""",height = 130)
-    #     st.markdown('<a href="https://px.a8.net/svt/ejp?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" rel="nofollow">無料で勝馬予想！ <br>穴馬券を当てる！</a><img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=3TCR4P+7XS70A+1V0I+HZ2R6" alt="">',unsafe_allow_html=True)
-
     number = st.number_input('オッズ',value = 1.00)
     horces = st.number_input('馬数',format='%d',value=18,min_value=1,max_value=18)
     bet = st.number_input('掛け金',format='%d',value=100,min_value=0)
@@ -266,7 +242,6 @@ if __name__ == "__main__":
 
     expected_value()
     afil()
-    news()
 
     #
     # stc.html("""
