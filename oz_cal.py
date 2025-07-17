@@ -273,7 +273,6 @@ if __name__ == "__main__":
     with tab3:
         news()
 
-    footer()
 
     #
     # stc.html("""
