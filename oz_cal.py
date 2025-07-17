@@ -265,14 +265,9 @@ if __name__ == "__main__":
 
     stc.html('''<head><meta name="google-adsense-account" content="ca-pub-6376522623125964"></head>''')
 
-    tab1,tab2,tab3 = st.tabs(["期待値計算機","競馬で買ったらGO","馬ニュース"])
-    with tab1:
-        expected_value()
-    with tab2:
-        afil()
-    with tab3:
-        news()
-
+    expected_value()
+    afil()
+    news()
 
     #
     # stc.html("""
