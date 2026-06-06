@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import pandas as pd
 import streamlit as st
 from scipy.special import comb
 from scipy.special import perm
 import streamlit.components.v1 as stc
+
+# 表示する馬券の種類(表示順)
+BET_TYPES = ['単勝', '複勝', '三連単', '三連複', '馬単', '馬連', 'ワイド', '枠連']
 
 
 def baken_prob(name, horses):
@@ -21,20 +25,34 @@ def baken_prob(name, horses):
     }[name]
 
 
-def show_baken(col, name, bet, horses, number):
-    """期待値( = 掛け金 × オッズ × 確率/100 )・的中確率・妙味判定を1列分表示する。"""
+def baken_metrics(name, bet, horses, number):
+    """馬券1種類の期待値・確率・損益分岐オッズ・回収率をまとめて算出する。"""
     prob = baken_prob(name, horses)
     expected = bet * number * prob / 100
     fair_odds = 100 / prob  # 期待値が掛け金と等しくなる損益分岐(公正)オッズ
+    payout_rate = number * prob  # 期待回収率(%) = 期待値 / 掛け金 × 100
+    return {
+        'name': name,
+        'prob': prob,
+        'expected': expected,
+        'fair_odds': fair_odds,
+        'payout_rate': payout_rate,
+        'is_value': number >= fair_odds,
+    }
+
+
+def show_baken(col, name, bet, horses, number):
+    """期待値( = 掛け金 × オッズ × 確率/100 )・的中確率・妙味判定を1列分表示する。"""
+    m = baken_metrics(name, bet, horses, number)
     col.subheader(name)
     col.metric(
         label=name + '期待値',
-        value=round(expected, 2),
-        delta=round(expected - bet, 2),
+        value=round(m['expected'], 2),
+        delta=round(m['expected'] - bet, 2),
     )
-    col.write('確率　' + str(round(prob, 2)) + '%')
-    col.write('損益分岐オッズ　' + str(round(fair_odds, 2)) + '倍')
-    if number >= fair_odds:
+    col.write('確率　' + str(round(m['prob'], 2)) + '%')
+    col.write('損益分岐オッズ　' + str(round(m['fair_odds'], 2)) + '倍')
+    if m['is_value']:
         col.success('妙味あり（割安）')
     else:
         col.warning('妙味なし（割高）')
@@ -48,26 +66,47 @@ if __name__ == "__main__":
     )
 
     st.title('競馬期待値計算機')
-    st.text('オッズ、出馬数、掛け金を入力して競馬の掛け方別の期待値を計算してくれます。')
-    st.text('期待値の下には掛け金と期待値の差を表示します。')
-    st.text('入力したオッズが損益分岐オッズ（理論上の公正オッズ）を上回れば「妙味あり（割安）」と判定します。')
-    st.text('賭ける時にどれくらいかける価値があるかの参考にお使いください。')
-    st.text('※単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものになります。※')
-    st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
-    st.subheader('更新内容')
+    st.caption('オッズ・出馬数・掛け金を入力すると、馬券の種類ごとに期待値と「妙味（割安かどうか）」を計算します。')
 
-    st.text('''
-    2025/07/17 サイトURL、レイアウト更新
-    ''')
+    with st.expander('📖 使い方・計算方法・注意事項', expanded=False):
+        st.markdown(
+            """
+            **使い方**
+            1. 検討したい馬券の **オッズ** を入力します。
+            2. レースの **出馬数** を選びます。
+            3. 賭けたい **掛け金** を入力します。
+
+            **見方**
+            - **期待値** … 掛け金 × オッズ × 的中確率。下の差分が＋なら期待値プラスです。
+            - **損益分岐オッズ** … 期待値が掛け金とちょうど等しくなる理論上の公正オッズ。
+            - **妙味判定** … 入力オッズが損益分岐オッズを上回れば「妙味あり（割安）」と判定します。
+            - **妙味ランキング** … 全馬券を期待回収率の高い順に並べ、最も妙味のある馬券を表示します。
+
+            **注意**
+            - 単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものです。
+            - 馬の特徴・馬場・距離・天気などの要素は考慮していませんので、参考程度にご利用ください。
+            """
+        )
+
+    with st.expander('🆕 更新内容', expanded=False):
+        st.markdown(
+            """
+            - **2026/06/06** 妙味判定（損益分岐オッズ）と妙味ランキングを追加、使い方ガイドを整理
+            - **2025/07/17** サイトURL、レイアウト更新
+            """
+        )
 
     st.markdown('<a target="_blank" href="https://www.jra.go.jp/">JRA公式サイト</a>',unsafe_allow_html=True)
     st.markdown('<a target="_blank" href="https://amzn.to/4coJX86">ウマ娘を見るならAmazonPrimeVideo</a>',unsafe_allow_html=True)
 
     st.write('---')
 
-    number = st.number_input('オッズ',value = 1.00)
-    horses = st.number_input('馬数',format='%d',value=18,min_value=1,max_value=18)
-    bet = st.number_input('掛け金',format='%d',value=100,min_value=0)
+    number = st.number_input('オッズ', value=1.00,
+                             help='検討したい馬券のオッズ（払戻倍率）を入力してください。')
+    horses = st.number_input('馬数', format='%d', value=18, min_value=1, max_value=18,
+                             help='そのレースに出走する頭数です。')
+    bet = st.number_input('掛け金', format='%d', value=100, min_value=0,
+                          help='1点あたりに賭ける金額（円）です。')
 
     st.write('---')
     # 単勝、複勝
@@ -86,6 +125,37 @@ if __name__ == "__main__":
     show_baken(col5, '枠連', bet, horses, number)
     show_baken(col6, '馬連', bet, horses, number)
     show_baken(col7, 'ワイド', bet, horses, number)
+
+    st.write('---')
+
+    # 妙味ランキング: 全馬券を期待回収率の高い順に並べて比較する
+    st.subheader('💡 妙味ランキング')
+    metrics = [baken_metrics(name, bet, horses, number) for name in BET_TYPES]
+    metrics.sort(key=lambda m: m['payout_rate'], reverse=True)
+
+    best = metrics[0]
+    if best['is_value']:
+        st.success(
+            f"最も妙味があるのは「{best['name']}」です（期待回収率 {best['payout_rate']:.1f}%）。"
+        )
+    else:
+        st.info(
+            f"このオッズでは妙味のある馬券はありません。最も回収率が高いのは「{best['name']}」"
+            f"（{best['payout_rate']:.1f}%）ですが、いずれも100%を下回ります。"
+        )
+
+    ranking = pd.DataFrame(
+        {
+            '馬券': [m['name'] for m in metrics],
+            '的中確率(%)': [round(m['prob'], 2) for m in metrics],
+            '損益分岐オッズ(倍)': [round(m['fair_odds'], 2) for m in metrics],
+            '期待値(円)': [round(m['expected'], 2) for m in metrics],
+            '期待回収率(%)': [round(m['payout_rate'], 1) for m in metrics],
+            '妙味': ['◎ 割安' if m['is_value'] else '× 割高' for m in metrics],
+        }
+    )
+    st.dataframe(ranking, hide_index=True, use_container_width=True)
+    st.caption('※ 期待回収率 = 期待値 ÷ 掛け金 × 100。100%を超えるほど妙味があります。')
 
     st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
