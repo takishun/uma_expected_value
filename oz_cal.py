@@ -22,9 +22,10 @@ def baken_prob(name, horses):
 
 
 def show_baken(col, name, bet, horses, number):
-    """期待値( = 掛け金 × オッズ × 確率/100 )と的中確率を1列分表示する。"""
+    """期待値( = 掛け金 × オッズ × 確率/100 )・的中確率・妙味判定を1列分表示する。"""
     prob = baken_prob(name, horses)
     expected = bet * number * prob / 100
+    fair_odds = 100 / prob  # 期待値が掛け金と等しくなる損益分岐(公正)オッズ
     col.subheader(name)
     col.metric(
         label=name + '期待値',
@@ -32,6 +33,11 @@ def show_baken(col, name, bet, horses, number):
         delta=round(expected - bet, 2),
     )
     col.write('確率　' + str(round(prob, 2)) + '%')
+    col.write('損益分岐オッズ　' + str(round(fair_odds, 2)) + '倍')
+    if number >= fair_odds:
+        col.success('妙味あり（割安）')
+    else:
+        col.warning('妙味なし（割高）')
 
 if __name__ == "__main__":
     st.set_page_config(
@@ -44,6 +50,7 @@ if __name__ == "__main__":
     st.title('競馬期待値計算機')
     st.text('オッズ、出馬数、掛け金を入力して競馬の掛け方別の期待値を計算してくれます。')
     st.text('期待値の下には掛け金と期待値の差を表示します。')
+    st.text('入力したオッズが損益分岐オッズ（理論上の公正オッズ）を上回れば「妙味あり（割安）」と判定します。')
     st.text('賭ける時にどれくらいかける価値があるかの参考にお使いください。')
     st.text('※単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものになります。※')
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
