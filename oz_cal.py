@@ -1,66 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import pandas as pd
-import datetime
-import matplotlib.pyplot as plt
-import japanize_matplotlib
-import seaborn as sns
 import streamlit as st
 from scipy.special import comb
 from scipy.special import perm
 import streamlit.components.v1 as stc
 
-def tanshou_cal(bet,horces,number):
-    return bet/horces*number
 
-def hukushou_cal(bet,horces,number):
-    return bet*3/horces*number
+def baken_prob(name, horses):
+    """馬券の種類ごとの的中確率(%)を出馬数から求める。"""
+    return {
+        '単勝': 100 / horses,
+        '複勝': 100 * 3 / horses,
+        '三連単': 100 / perm(horses, 3),
+        '三連複': 100 / comb(horses, 3),
+        '馬単': 100 / perm(horses, 2),
+        '馬連': 100 / comb(horses, 2),
+        'ワイド': 100 * perm(3, 2) / comb(horses, 2),
+        '枠連': 100 / comb(9, 2),
+    }[name]
 
-def sanrentan(bet,horces,number):
-    return bet*number/perm(horces,3)
 
-def sanrenpuku(bet,horces,number):
-    return bet*number*6./perm(horces,3)
-
-def umaren(bet,horces,number):
-    return bet*number*2./perm(horces,2)
-
-def umatan(bet,horces,number):
-    return bet*number/perm(horces,2)
-
-def wide(bet,horces,number):
-    return bet*number*perm(3,2)/comb(horces,2)
-
-def tanshou_prob(horces,number):
-    return 100/horces
-
-def hukushou_prob(horces,number):
-    return 100*3/horces
-
-def sanrentan_prob(horces,number):
-    return 100/perm(horces,3)
-
-def sanrenpuku_prob(horces,number):
-    return 100/comb(horces,3)
-
-def umaren_prob(horces,number):
-    return 100/comb(horces,2)
-
-def umatan_prob(horces,number):
-    return 100/perm(horces,2)
-
-def wide_prob(horces,number):
-    return 100*perm(3,2)/comb(horces,2)
-
-def memo_baken():
-    pass
-
-def wakuren():
-    return 100/comb(9,2)
-
-def news():
-    st.text('news')
+def show_baken(col, name, bet, horses, number):
+    """期待値( = 掛け金 × オッズ × 確率/100 )・的中確率・妙味判定を1列分表示する。"""
+    prob = baken_prob(name, horses)
+    expected = bet * number * prob / 100
+    fair_odds = 100 / prob  # 期待値が掛け金と等しくなる損益分岐(公正)オッズ
+    col.subheader(name)
+    col.metric(
+        label=name + '期待値',
+        value=round(expected, 2),
+        delta=round(expected - bet, 2),
+    )
+    col.write('確率　' + str(round(prob, 2)) + '%')
+    col.write('損益分岐オッズ　' + str(round(fair_odds, 2)) + '倍')
+    if number >= fair_odds:
+        col.success('妙味あり（割安）')
+    else:
+        col.warning('妙味なし（割高）')
 
 if __name__ == "__main__":
     st.set_page_config(
@@ -73,6 +50,7 @@ if __name__ == "__main__":
     st.title('競馬期待値計算機')
     st.text('オッズ、出馬数、掛け金を入力して競馬の掛け方別の期待値を計算してくれます。')
     st.text('期待値の下には掛け金と期待値の差を表示します。')
+    st.text('入力したオッズが損益分岐オッズ（理論上の公正オッズ）を上回れば「妙味あり（割安）」と判定します。')
     st.text('賭ける時にどれくらいかける価値があるかの参考にお使いください。')
     st.text('※単純にレースの出馬数に応じた賭け方別の組み合わせから確率を求めたものになります。※')
     st.text('※馬の特徴や、馬場、レース上、距離、天気などの要素は考慮されておりませんのでご注意ください。※')
@@ -88,49 +66,26 @@ if __name__ == "__main__":
     st.write('---')
 
     number = st.number_input('オッズ',value = 1.00)
-    horces = st.number_input('馬数',format='%d',value=18,min_value=1,max_value=18)
+    horses = st.number_input('馬数',format='%d',value=18,min_value=1,max_value=18)
     bet = st.number_input('掛け金',format='%d',value=100,min_value=0)
 
     st.write('---')
-    # st.subheader('単勝、複勝期待値')
+    # 単勝、複勝
     col1, col2, colex = st.columns(3)
-    col1.subheader('単勝')
-    col1.metric(label='単勝期待値', value = round(tanshou_cal(bet,horces,number),2),delta = round(tanshou_cal(bet,horces,number)-bet,2))
-    col1.write('確率　'+str(round(tanshou_prob(horces,number),2))+'%')
+    show_baken(col1, '単勝', bet, horses, number)
+    show_baken(col2, '複勝', bet, horses, number)
 
-    col2.subheader('複勝')
-    col2.metric(label='複勝期待値', value = round(hukushou_cal(bet,horces,number),2),delta = round(hukushou_cal(bet,horces,number)-bet,2))
-    col2.write('確率　'+str(round(hukushou_prob(horces,number),2))+'%')
+    # 三連単、三連複、馬単
+    col3, col4, colex2 = st.columns(3)
+    show_baken(col3, '三連単', bet, horses, number)
+    show_baken(col4, '三連複', bet, horses, number)
+    show_baken(colex2, '馬単', bet, horses, number)
 
-    #三連単、三連複
-    # st.subheader('三連単、三連複期待値')
-    col3,col4,colex2 = st.columns(3)
-    col3.subheader('三連単')
-    col3.metric(label='三連単期待値', value = round(sanrentan(bet,horces,number),2),delta = round(sanrentan(bet,horces,number)-bet,2))
-    col3.write('確率　'+str(round(sanrentan_prob(horces,number),2))+'%')
-
-    col4.subheader('三連複')
-    col4.metric(label='三連複期待値', value = round(sanrenpuku(bet,horces,number),2),delta = round(sanrenpuku(bet,horces,number)-bet,2))
-    col4.write('確率　'+str(round(sanrenpuku_prob(horces,number),2))+'%')
-
-    colex2.subheader('馬単')
-    colex2.metric(label='馬単期待値', value = round(umatan(bet,horces,number),2),delta = round(umatan(bet,horces,number)-bet,2))
-    colex2.write('確率　'+str(round(umatan_prob(horces,number),2))+'%')
-
-    #馬単、馬連、ワイド
-    # st.subheader('馬単、馬連、ワイド期待値')
-    col5,col6,col7 = st.columns(3)
-    col5.subheader('枠連')
-    col5.metric(label='枠連期待値', value = round(wakuren()*number*bet/100,2),delta = round(wakuren()*number*bet/100-bet,2))
-    col5.write('確率　'+str(round(wakuren(),2))+'%')
-
-    col6.subheader('馬連')
-    col6.metric(label='馬連期待値', value = round(umaren(bet,horces,number),2),delta = round(umaren(bet,horces,number)-bet,2))
-    col6.write('確率　'+str(round(umaren_prob(horces,number),2))+'%')
-
-    col7.subheader('ワイド')
-    col7.metric(label='ワイド期待値', value = round(wide(bet,horces,number),2),delta = round(wide(bet,horces,number)-bet,2))
-    col7.write('確率　'+str(round(wide_prob(horces,number),2))+'%')
+    # 枠連、馬連、ワイド
+    col5, col6, col7 = st.columns(3)
+    show_baken(col5, '枠連', bet, horses, number)
+    show_baken(col6, '馬連', bet, horses, number)
+    show_baken(col7, 'ワイド', bet, horses, number)
 
     st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
