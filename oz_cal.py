@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import japanize_matplotlib  # noqa: F401  matplotlibの日本語フォント対応
 import streamlit as st
 from scipy.special import comb
 from scipy.special import perm
@@ -57,6 +60,36 @@ def show_baken(col, name, bet, horses, number):
     else:
         col.warning('妙味なし（割高）')
 
+
+def breakeven_chart(name, bet, horses, current_odds):
+    """馬券種ごとに 期待値 vs オッズ を描画し、損益分岐オッズと利益ゾーンを示す。"""
+    prob = baken_prob(name, horses)
+    fair_odds = 100 / prob  # 期待値が掛け金と等しくなる損益分岐オッズ
+    x_max = max(fair_odds * 2, current_odds * 1.2, 1.0)
+    xs = np.linspace(0, x_max, 200)
+    ys = bet * xs * prob / 100  # 各オッズでの期待値(円)
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(xs, ys, color='#1f77b4', label='期待値')
+    ax.axhline(bet, color='gray', linestyle='--', label=f'掛け金 {bet}円（損益分岐）')
+    ax.axvline(fair_odds, color='red', linestyle=':', label=f'損益分岐オッズ {fair_odds:.1f}倍')
+    ax.fill_between(xs, bet, ys, where=(ys >= bet), color='green', alpha=0.15, label='利益ゾーン')
+
+    cur_ev = bet * current_odds * prob / 100
+    ax.scatter([current_odds], [cur_ev], color='black', zorder=5)
+    ax.annotate(
+        f'入力オッズ {current_odds:.1f}倍\n期待値 {cur_ev:.1f}円',
+        (current_odds, cur_ev), textcoords='offset points', xytext=(10, 10), fontsize=8,
+    )
+
+    ax.set_xlabel('オッズ（倍）')
+    ax.set_ylabel('期待値（円）')
+    ax.set_title(f'{name} の損益分岐グラフ（{horses}頭・掛け金{bet}円）')
+    ax.legend(loc='upper left', fontsize=8)
+    ax.grid(alpha=0.3)
+    fig.tight_layout()
+    return fig, fair_odds
+
 if __name__ == "__main__":
     st.set_page_config(
         page_title="競馬期待値カリキュレーター",
@@ -91,6 +124,7 @@ if __name__ == "__main__":
     with st.expander('🆕 更新内容', expanded=False):
         st.markdown(
             """
+            - **2026/06/17** 損益分岐グラフのタブを追加（画面をタブ構成に変更）、アフィリエイトリンクを追加・更新
             - **2026/06/06** 妙味判定（損益分岐オッズ）と妙味ランキングを追加、使い方ガイドを整理
             - **2025/07/17** サイトURL、レイアウト更新
             """
@@ -109,53 +143,69 @@ if __name__ == "__main__":
                           help='1点あたりに賭ける金額（円）です。')
 
     st.write('---')
-    # 単勝、複勝
-    col1, col2, colex = st.columns(3)
-    show_baken(col1, '単勝', bet, horses, number)
-    show_baken(col2, '複勝', bet, horses, number)
 
-    # 三連単、三連複、馬単
-    col3, col4, colex2 = st.columns(3)
-    show_baken(col3, '三連単', bet, horses, number)
-    show_baken(col4, '三連複', bet, horses, number)
-    show_baken(colex2, '馬単', bet, horses, number)
+    tab1, tab2 = st.tabs(['📊 期待値計算', '📈 損益分岐グラフ'])
 
-    # 枠連、馬連、ワイド
-    col5, col6, col7 = st.columns(3)
-    show_baken(col5, '枠連', bet, horses, number)
-    show_baken(col6, '馬連', bet, horses, number)
-    show_baken(col7, 'ワイド', bet, horses, number)
+    with tab1:
+        # 単勝、複勝
+        col1, col2, colex = st.columns(3)
+        show_baken(col1, '単勝', bet, horses, number)
+        show_baken(col2, '複勝', bet, horses, number)
 
-    st.write('---')
+        # 三連単、三連複、馬単
+        col3, col4, colex2 = st.columns(3)
+        show_baken(col3, '三連単', bet, horses, number)
+        show_baken(col4, '三連複', bet, horses, number)
+        show_baken(colex2, '馬単', bet, horses, number)
 
-    # 妙味ランキング: 全馬券を期待回収率の高い順に並べて比較する
-    st.subheader('💡 妙味ランキング')
-    metrics = [baken_metrics(name, bet, horses, number) for name in BET_TYPES]
-    metrics.sort(key=lambda m: m['payout_rate'], reverse=True)
+        # 枠連、馬連、ワイド
+        col5, col6, col7 = st.columns(3)
+        show_baken(col5, '枠連', bet, horses, number)
+        show_baken(col6, '馬連', bet, horses, number)
+        show_baken(col7, 'ワイド', bet, horses, number)
 
-    best = metrics[0]
-    if best['is_value']:
-        st.success(
-            f"最も妙味があるのは「{best['name']}」です（期待回収率 {best['payout_rate']:.1f}%）。"
+        st.write('---')
+
+        # 妙味ランキング: 全馬券を期待回収率の高い順に並べて比較する
+        st.subheader('💡 妙味ランキング')
+        metrics = [baken_metrics(name, bet, horses, number) for name in BET_TYPES]
+        metrics.sort(key=lambda m: m['payout_rate'], reverse=True)
+
+        best = metrics[0]
+        if best['is_value']:
+            st.success(
+                f"最も妙味があるのは「{best['name']}」です（期待回収率 {best['payout_rate']:.1f}%）。"
+            )
+        else:
+            st.info(
+                f"このオッズでは妙味のある馬券はありません。最も回収率が高いのは「{best['name']}」"
+                f"（{best['payout_rate']:.1f}%）ですが、いずれも100%を下回ります。"
+            )
+
+        ranking = pd.DataFrame(
+            {
+                '馬券': [m['name'] for m in metrics],
+                '的中確率(%)': [round(m['prob'], 2) for m in metrics],
+                '損益分岐オッズ(倍)': [round(m['fair_odds'], 2) for m in metrics],
+                '期待値(円)': [round(m['expected'], 2) for m in metrics],
+                '期待回収率(%)': [round(m['payout_rate'], 1) for m in metrics],
+                '妙味': ['◎ 割安' if m['is_value'] else '× 割高' for m in metrics],
+            }
         )
-    else:
+        st.dataframe(ranking, hide_index=True, use_container_width=True)
+        st.caption('※ 期待回収率 = 期待値 ÷ 掛け金 × 100。100%を超えるほど妙味があります。')
+
+    with tab2:
+        st.subheader('📈 損益分岐グラフ')
+        st.caption('馬券種を選ぶと、「オッズが何倍を超えれば利益（期待値プラス）になるか」を可視化します。')
+        graph_name = st.selectbox('馬券種を選択', BET_TYPES, key='graph_baken')
+        fig, fair_odds = breakeven_chart(graph_name, bet, horses, number)
+        st.pyplot(fig)
+        plt.close(fig)
         st.info(
-            f"このオッズでは妙味のある馬券はありません。最も回収率が高いのは「{best['name']}」"
-            f"（{best['payout_rate']:.1f}%）ですが、いずれも100%を下回ります。"
+            f'「{graph_name}」（{horses}頭）の損益分岐オッズは {fair_odds:.2f}倍です。'
+            f'入力オッズがこれを上回れば期待値プラス（妙味あり）になります。'
         )
-
-    ranking = pd.DataFrame(
-        {
-            '馬券': [m['name'] for m in metrics],
-            '的中確率(%)': [round(m['prob'], 2) for m in metrics],
-            '損益分岐オッズ(倍)': [round(m['fair_odds'], 2) for m in metrics],
-            '期待値(円)': [round(m['expected'], 2) for m in metrics],
-            '期待回収率(%)': [round(m['payout_rate'], 1) for m in metrics],
-            '妙味': ['◎ 割安' if m['is_value'] else '× 割高' for m in metrics],
-        }
-    )
-    st.dataframe(ranking, hide_index=True, use_container_width=True)
-    st.caption('※ 期待回収率 = 期待値 ÷ 掛け金 × 100。100%を超えるほど妙味があります。')
 
     st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
@@ -163,10 +213,11 @@ if __name__ == "__main__":
     with fpub1:
         stc.html(
             """
-            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ctsmatch";rakuten_genreId="0";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
-            <img border="0" width="1" height="1" src="https://www15.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
+            <a href="https://px.a8.net/svt/ejp?a8mat=4B5YSD+5YC6EY+4JVQ+614CX" rel="nofollow">
+            <img border="0" width="300" height="250" alt="" src="https://www25.a8.net/svt/bgt?aid=260618845360&wid=006&eno=01&mid=s00000021239001013000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=4B5YSD+5YC6EY+4JVQ+614CX" alt="">
             """,
-            height=250,
+            height=260,
         )
         stc.html(
             """
@@ -180,10 +231,11 @@ if __name__ == "__main__":
     with fpub2:
         stc.html(
             """
-            <!-- Rakuten Widget FROM HERE --><script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="568591";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x240";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3N237F%2BFM1BP6%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a22012721403_3N237F_FM1BP6_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script><!-- Rakuten Widget TO HERE -->
-            <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
+            <a href="https://px.a8.net/svt/ejp?a8mat=4B5YSD+5XQQT6+2Z0I+IHXRL" rel="nofollow">
+            <img border="0" width="300" height="250" alt="" src="https://www23.a8.net/svt/bgt?aid=260618845359&wid=006&eno=01&mid=s00000013869003107000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=4B5YSD+5XQQT6+2Z0I+IHXRL" alt="">
             """,
-        height=250,
+            height=260,
         )
         stc.html(
             """
