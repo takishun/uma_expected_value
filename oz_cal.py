@@ -168,6 +168,14 @@ if __name__ == "__main__":
             """,
             height=250,
         )
+        stc.html(
+            """
+            <a href="https://px.a8.net/svt/ejp?a8mat=45GG1D+2RFINU+4RKY+63H8H" rel="nofollow">
+            <img border="0" width="300" height="250" alt="" src="https://www20.a8.net/svt/bgt?aid=251030065167&wid=006&eno=01&mid=s00000022237001024000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www17.a8.net/0.gif?a8mat=45GG1D+2RFINU+4RKY+63H8H" alt="">
+            """,
+            height=260,
+        )
 
     with fpub2:
         stc.html(
@@ -176,6 +184,14 @@ if __name__ == "__main__":
             <img border="0" width="1" height="1" src="https://www14.a8.net/0.gif?a8mat=3N237F+FM1BP6+2HOM+BS629" alt="">
             """,
         height=250,
+        )
+        stc.html(
+            """
+            <a href="https://px.a8.net/svt/ejp?a8mat=3NF11N+2A5Y4A+2PEO+1I4AW1" rel="nofollow">
+            <img border="0" width="300" height="250" alt="" src="https://www24.a8.net/svt/bgt?aid=220730891138&wid=006&eno=01&mid=s00000012624009090000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3NF11N+2A5Y4A+2PEO+1I4AW1" alt="">
+            """,
+            height=260,
         )
 
     with fpub3:
@@ -186,6 +202,14 @@ if __name__ == "__main__":
             <img border="0" width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=3TCR4P+3RQYKA+19NM+C03K1" alt="">
             """,
         height=250,
+        )
+        stc.html(
+            """
+            <a href="https://px.a8.net/svt/ejp?a8mat=4B5YSD+4W8FP6+3IB8+609HT" rel="nofollow">
+            <img border="0" width="250" height="250" alt="" src="https://www27.a8.net/svt/bgt?aid=260618845296&wid=006&eno=01&mid=s00000016370001009000&mc=1"></a>
+            <img border="0" width="1" height="1" src="https://www12.a8.net/0.gif?a8mat=4B5YSD+4W8FP6+3IB8+609HT" alt="">
+            """,
+            height=260,
         )
 
     st.write('---')
