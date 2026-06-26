@@ -330,6 +330,4 @@ def afil():
         height=250,
         )
 
-    stc.html("""
-    <iframe class="note-embed" src="https://note.com/embed/notes/nd947001a1104" style="border: 0; display: block; max-width: 99%; width: 494px; padding: 0px; margin: 10px 0px; position: static; visibility: visible;" height="400"></iframe><script async src="https://note.com/scripts/embed.js" charset="utf-8"></script>
-    """, height=420)
+    stc.iframe("https://note.com/embed/notes/nd947001a1104", height=400)
