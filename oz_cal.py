@@ -44,19 +44,6 @@ def baken_metrics(name, bet, horses, number):
     }
 
 
-def tansho_metrics(bet, odds, win_prob):
-    """単勝1点の期待値・期待回収率・損益分岐勝率・妙味を計算する。"""
-    expected = bet * odds * win_prob / 100
-    payout_rate = odds * win_prob  # 期待回収率(%) = 期待値 / 掛け金 × 100
-    breakeven_prob = 100 / odds if odds > 0 else float('inf')  # 損益分岐に必要な勝率(%)
-    return {
-        'expected': expected,
-        'payout_rate': payout_rate,
-        'breakeven_prob': breakeven_prob,
-        'is_value': odds > 0 and win_prob >= breakeven_prob,
-    }
-
-
 def show_baken(col, name, bet, horses, number):
     """期待値( = 掛け金 × オッズ × 確率/100 )・的中確率・妙味判定を1列分表示する。"""
     m = baken_metrics(name, bet, horses, number)
@@ -137,7 +124,7 @@ if __name__ == "__main__":
     with st.expander('🆕 更新内容', expanded=False):
         st.markdown(
             """
-            - **2026/06/17** 勝率手入力モード（単勝）のタブを追加、損益分岐グラフのタブを追加、アフィリエイトリンクを追加・更新
+            - **2026/06/17** 損益分岐グラフのタブを追加、アフィリエイトリンクを追加・更新
             - **2026/06/06** 妙味判定（損益分岐オッズ）と妙味ランキングを追加、使い方ガイドを整理
             - **2025/07/17** サイトURL、レイアウト更新
             """
@@ -157,7 +144,7 @@ if __name__ == "__main__":
 
     st.write('---')
 
-    tab1, tab2, tab3 = st.tabs(['📊 期待値計算', '📈 損益分岐グラフ', '🎯 勝率手入力（単勝）'])
+    tab1, tab2 = st.tabs(['📊 期待値計算', '📈 損益分岐グラフ'])
 
     with tab1:
         # 単勝、複勝
@@ -219,76 +206,6 @@ if __name__ == "__main__":
             f'「{graph_name}」（{horses}頭）の損益分岐オッズは {fair_odds:.2f}倍です。'
             f'入力オッズがこれを上回れば期待値プラス（妙味あり）になります。'
         )
-
-    with tab3:
-        st.subheader('🎯 勝率手入力（単勝）')
-        st.caption(
-            '各馬のオッズと予想勝率(%)を入力すると、単勝の期待値・妙味を馬ごとに判定します。'
-            '（勝率＝的中率が一致する単勝のみ対応。予想勝率の合計は100%が目安です。）'
-        )
-
-        # 共有入力 horses の頭数ぶん行をシード（均等勝率を初期値に）
-        default_df = pd.DataFrame(
-            {
-                '馬番': list(range(1, horses + 1)),
-                'オッズ': [10.0] * horses,
-                '予想勝率(%)': [round(100 / horses, 1)] * horses,
-            }
-        )
-        edited = st.data_editor(
-            default_df,
-            hide_index=True,
-            num_rows='fixed',
-            use_container_width=True,
-            column_config={
-                '馬番': st.column_config.NumberColumn(disabled=True),
-                'オッズ': st.column_config.NumberColumn(min_value=0.0, format='%.1f'),
-                '予想勝率(%)': st.column_config.NumberColumn(min_value=0.0, max_value=100.0, format='%.1f'),
-            },
-            key='tansho_editor',
-        )
-
-        # 空欄/NaN は0として扱う
-        edited = edited.fillna(0)
-
-        total_prob = edited['予想勝率(%)'].sum()
-        if abs(total_prob - 100) > 0.1:
-            st.warning(f'予想勝率の合計が {total_prob:.1f}% です（目安は100%）。')
-
-        rows = []
-        for _, r in edited.iterrows():
-            m = tansho_metrics(bet, r['オッズ'], r['予想勝率(%)'])
-            rows.append(
-                {
-                    '馬番': int(r['馬番']),
-                    'オッズ(倍)': round(r['オッズ'], 1),
-                    '予想勝率(%)': round(r['予想勝率(%)'], 1),
-                    '損益分岐勝率(%)': round(m['breakeven_prob'], 1) if m['breakeven_prob'] != float('inf') else None,
-                    '期待値(円)': round(m['expected'], 2),
-                    '期待回収率(%)': round(m['payout_rate'], 1),
-                    '妙味': '◎ 割安' if m['is_value'] else '× 割高',
-                    '_pr': m['payout_rate'],
-                    '_value': m['is_value'],
-                }
-            )
-        result = pd.DataFrame(rows).sort_values('_pr', ascending=False)
-
-        value_rows = result[result['_value']]
-        if not value_rows.empty:
-            top = value_rows.iloc[0]
-            st.success(
-                f"妙味があるのは 馬番{int(top['馬番'])}（オッズ{top['オッズ(倍)']}倍・勝率{top['予想勝率(%)']}%）です。"
-                f"期待回収率 {top['期待回収率(%)']:.1f}%。"
-            )
-        else:
-            st.info('入力した勝率では、妙味のある（期待回収率100%超の）馬はありません。')
-
-        st.dataframe(
-            result.drop(columns=['_pr', '_value']),
-            hide_index=True,
-            use_container_width=True,
-        )
-        st.caption('※ 損益分岐勝率 = 100 ÷ オッズ。予想勝率がこれを上回る馬が「妙味あり（割安）」です。')
 
     st.write('---')
     fpub1,fpub2,fpub3 = st.columns(3)
