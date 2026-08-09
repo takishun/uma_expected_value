@@ -1,0 +1,928 @@
+<title>スマホ版レイアウト提案 — 競馬期待値計算機</title>
+<style>
+  :root {
+    --bg: #EEF0EA;
+    --surface: #F8F9F5;
+    --surface-2: #E4E8DE;
+    --ink: #171B15;
+    --muted: #5C6458;
+    --line: #D3D8CB;
+    --accent: #2F6B45;
+    --accent-soft: #DCE8DF;
+    --hot: #C6482E;
+    --amber: #B8830F;
+    --shadow: 0 18px 40px -22px rgba(20, 32, 20, .55);
+
+    --serif: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif JP", "Songti SC", serif;
+    --sans: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic", "YuGothic", "Noto Sans JP", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, "DejaVu Sans Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #11150F;
+      --surface: #191E17;
+      --surface-2: #232922;
+      --ink: #E7EAE1;
+      --muted: #98A092;
+      --line: #2D342B;
+      --accent: #6FBF8A;
+      --accent-soft: #1F2B22;
+      --hot: #E4795F;
+      --amber: #D8A83C;
+      --shadow: 0 18px 40px -22px rgba(0, 0, 0, .8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #11150F;
+    --surface: #191E17;
+    --surface-2: #232922;
+    --ink: #E7EAE1;
+    --muted: #98A092;
+    --line: #2D342B;
+    --accent: #6FBF8A;
+    --accent-soft: #1F2B22;
+    --hot: #E4795F;
+    --amber: #D8A83C;
+    --shadow: 0 18px 40px -22px rgba(0, 0, 0, .8);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(32px, 6vw, 72px) clamp(18px, 4vw, 40px) 96px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(48px, 7vw, 88px);
+  }
+
+  /* ---------- header ---------- */
+  .masthead { display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 6vw, 50px);
+    line-height: 1.25; margin: 0; font-weight: 600;
+    text-wrap: balance; letter-spacing: .01em;
+  }
+  .lede { max-width: 62ch; color: var(--muted); margin: 0; font-size: 15.5px; }
+  .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+
+  h2 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(21px, 3.2vw, 27px); margin: 0; line-height: 1.4;
+    text-wrap: balance;
+  }
+  h3 { font-size: 15px; margin: 0; font-weight: 700; letter-spacing: .04em; }
+
+  /* ---------- shared issues ---------- */
+  .issues { display: flex; flex-direction: column; gap: 22px; }
+  .issue-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .issue {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 4px; padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .issue b { font-size: 14.5px; }
+  .issue p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.7; }
+  .issue .fix { font-size: 13px; color: var(--accent); font-weight: 600; }
+
+  /* ---------- proposal block ---------- */
+  .proposal {
+    display: grid;
+    grid-template-columns: 400px minmax(0, 1fr);
+    gap: clamp(24px, 4vw, 52px);
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .proposal { grid-template-columns: minmax(0, 1fr); }
+    .stage { justify-content: flex-start; }
+  }
+  .stage {
+    display: flex; justify-content: center;
+    position: sticky; top: 28px;
+  }
+  @media (max-width: 880px) { .stage { position: static; } }
+
+  .brief { display: flex; flex-direction: column; gap: 20px; padding-top: 6px; }
+  .brief-head { display: flex; flex-direction: column; gap: 10px; }
+  .tag-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .tag {
+    font-family: var(--mono); font-size: 11.5px; letter-spacing: .12em;
+    background: var(--accent); color: #F6FAF4; padding: 3px 9px; border-radius: 2px;
+    font-weight: 600;
+  }
+  :root[data-theme="dark"] .tag { color: #0F1710; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag { color: #0F1710; } }
+  .tag-sub { font-size: 12.5px; color: var(--muted); letter-spacing: .06em; }
+  .brief p { margin: 0; font-size: 14.5px; color: var(--muted); max-width: 56ch; }
+  .brief p strong { color: var(--ink); font-weight: 600; }
+
+  .points { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .points li {
+    font-size: 14px; line-height: 1.65; padding-left: 20px; position: relative; color: var(--ink);
+  }
+  .points li::before {
+    content: ""; position: absolute; left: 3px; top: .62em;
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  }
+
+  .spec {
+    border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: 92px minmax(0, 1fr);
+  }
+  .spec > div { border-bottom: 1px solid var(--line); padding: 9px 4px; font-size: 13.5px; }
+  .spec dt { color: var(--muted); font-size: 12px; letter-spacing: .08em; padding-top: 11px; }
+  .spec dd { margin: 0; }
+  .lv { font-family: var(--mono); font-weight: 700; }
+  .lv-easy { color: var(--accent); }
+  .lv-mid { color: var(--amber); }
+  .lv-hard { color: var(--hot); }
+
+  /* ---------- phone frame ---------- */
+  .phone {
+    width: 372px; max-width: 100%;
+    border-radius: 40px; padding: 11px;
+    background: linear-gradient(160deg, #333A31, #12160F);
+    box-shadow: var(--shadow);
+    flex: none;
+  }
+  .screen {
+    height: 690px; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 30px; position: relative;
+    font-size: 14px; line-height: 1.5;
+    scrollbar-width: thin;
+  }
+  .screen::-webkit-scrollbar { width: 5px; }
+  .screen::-webkit-scrollbar-thumb { background: rgba(128, 140, 122, .45); border-radius: 3px; }
+  .statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em;
+    padding: 9px 20px 3px; opacity: .55;
+  }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* =========================================================
+     案A — オッズ掲示板
+     ========================================================= */
+  .scr-a { background: #0D110C; color: #E3E8DE; }
+  .a-head {
+    position: sticky; top: 0; z-index: 3;
+    background: #0D110C; padding: 4px 18px 12px;
+    border-bottom: 1px solid #212A20;
+  }
+  .a-brand {
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-size: 13px; font-weight: 700; letter-spacing: .04em; margin-bottom: 10px;
+  }
+  .a-brand span { font-size: 10.5px; color: #7C8A76; font-weight: 500; letter-spacing: .1em; }
+  .a-inputs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .a-in {
+    background: #171E16; border: 1px solid #263024; border-radius: 8px;
+    padding: 7px 9px 8px; display: flex; flex-direction: column; gap: 1px;
+  }
+  .a-in i { font-style: normal; font-size: 10px; color: #7C8A76; letter-spacing: .08em; }
+  .a-in b {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 19px; color: #F2C755; font-weight: 600; line-height: 1.2;
+  }
+  .a-in b em { font-style: normal; font-size: 11px; color: #8B9784; margin-left: 2px; }
+  .a-sum {
+    padding: 12px 18px 8px; display: flex; align-items: baseline; gap: 8px;
+    font-size: 11.5px; color: #8B9784; letter-spacing: .06em;
+  }
+  .a-sum strong { color: #7FD09B; font-family: var(--mono); font-size: 13px; }
+  .a-list { list-style: none; margin: 0; padding: 0 12px 18px; display: flex; flex-direction: column; gap: 5px; }
+  .a-row {
+    background: #141A13; border: 1px solid #212A20; border-left: 3px solid #33402F;
+    border-radius: 7px; padding: 10px 12px 11px;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px;
+  }
+  .a-row.good { border-left-color: #4FA96F; background: #131E16; }
+  .a-name { font-size: 15px; font-weight: 700; letter-spacing: .06em; }
+  .a-meta {
+    grid-column: 1; font-size: 10.5px; color: #7C8A76;
+    font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: .02em;
+  }
+  .a-val { grid-row: 1 / span 2; align-self: center; text-align: right; }
+  .a-val b {
+    display: block; font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 21px; font-weight: 600; color: #C9D3C2; line-height: 1.1;
+  }
+  .a-row.good .a-val b { color: #7FD09B; }
+  .a-val b em { font-style: normal; font-size: 11px; opacity: .6; margin-left: 1px; }
+  .a-val i { font-style: normal; font-size: 10px; letter-spacing: .1em; color: #7C8A76; }
+  .a-row.good .a-val i { color: #7FD09B; }
+  .a-track {
+    grid-column: 1 / -1; margin-top: 8px; height: 4px; border-radius: 2px;
+    background: #232C21; position: relative; overflow: hidden;
+  }
+  .a-track span { position: absolute; inset: 0 auto 0 0; background: #47604A; border-radius: 2px; }
+  .a-row.good .a-track span { background: #4FA96F; }
+  .a-track::after {
+    content: ""; position: absolute; left: 50%; top: -2px; bottom: -2px;
+    width: 1px; background: #6E7C68;
+  }
+  .a-foot {
+    margin: 0 12px 20px; padding: 13px 14px; border-radius: 8px;
+    background: #171E16; border: 1px solid #263024;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12.5px; color: #A9B5A2;
+  }
+  .a-foot em { font-style: normal; color: #F2C755; }
+
+  /* =========================================================
+     案B — マークシート
+     ========================================================= */
+  .scr-b { background: #FBFAF4; color: #1B1E17; }
+  .b-head {
+    background: #26583C; color: #EFF5EC; padding: 12px 18px 16px;
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .b-head b { font-size: 16px; letter-spacing: .05em; }
+  .b-head span { font-size: 11px; opacity: .78; letter-spacing: .04em; }
+  .b-form { padding: 16px 16px 4px; display: flex; flex-direction: column; gap: 10px; }
+  .b-field {
+    border: 1px solid #D8D6C6; border-radius: 10px; background: #FFF;
+    padding: 9px 10px 9px 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .b-field > span { font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+  .b-field > span i { display: block; font-style: normal; font-size: 10.5px; font-weight: 400; color: #7A7C67; letter-spacing: 0; }
+  .b-step { display: flex; align-items: center; gap: 4px; }
+  .b-step button {
+    width: 34px; height: 34px; border-radius: 8px; border: 1px solid #D8D6C6;
+    background: #F3F2E8; color: #3D4436; font-size: 17px; line-height: 1;
+    font-family: var(--sans); cursor: default;
+  }
+  .b-step b {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 19px; min-width: 62px; text-align: center; font-weight: 600;
+  }
+  .b-banner {
+    margin: 12px 16px 2px; padding: 11px 14px; border-radius: 10px;
+    background: #E4F0E4; border: 1px solid #BFDCC4; color: #1E5236;
+    font-size: 12.5px; line-height: 1.6;
+  }
+  .b-banner b { font-size: 14px; }
+  .b-grid {
+    padding: 14px 16px 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px;
+  }
+  .b-card {
+    background: #FFF; border: 1px solid #DEDCCC; border-radius: 12px;
+    padding: 11px 12px 12px; display: flex; flex-direction: column; gap: 2px;
+    border-top: 3px solid #C9C7B4;
+  }
+  .b-card.good { border-top-color: #3E8A5B; }
+  .b-card > span { font-size: 12.5px; font-weight: 700; letter-spacing: .07em; display: flex; align-items: center; gap: 6px; }
+  .b-dot { width: 8px; height: 8px; border-radius: 2px; background: #C0BEA9; flex: none; }
+  .b-card.good .b-dot { background: #3E8A5B; }
+  .b-card strong {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 22px; font-weight: 600; line-height: 1.25; letter-spacing: -.01em;
+  }
+  .b-card strong em { font-style: normal; font-size: 11px; color: #7A7C67; margin-left: 1px; }
+  .b-card .b-sub {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 10.5px; color: #7A7C67;
+  }
+  .b-flag {
+    margin-top: 6px; align-self: flex-start; font-size: 10.5px; letter-spacing: .08em;
+    padding: 2px 7px; border-radius: 999px; background: #F0EFE2; color: #7A7C67; font-weight: 700;
+  }
+  .b-card.good .b-flag { background: #DFEEE2; color: #23663F; }
+
+  /* =========================================================
+     案C — ヒーロー＋固定入力バー
+     ========================================================= */
+  .scr-c { background: #F6F7F3; color: #191D16; padding-bottom: 0; }
+  .c-top { padding: 6px 18px 0; display: flex; justify-content: space-between; align-items: center; }
+  .c-top b { font-size: 13.5px; letter-spacing: .05em; }
+  .c-top span { font-size: 11px; color: #6B7264; }
+  .c-hero {
+    margin: 12px 16px 0; border-radius: 18px; padding: 18px 18px 16px;
+    background: linear-gradient(155deg, #2A6244 0%, #17402C 100%); color: #EAF3E8;
+  }
+  .c-hero > i { font-style: normal; font-size: 10.5px; letter-spacing: .16em; opacity: .72; }
+  .c-hero-main { display: flex; align-items: flex-end; gap: 10px; margin-top: 6px; }
+  .c-hero-main b { font-size: 27px; font-family: var(--serif); font-weight: 600; letter-spacing: .04em; }
+  .c-hero-main u {
+    text-decoration: none; font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 34px; font-weight: 600; margin-left: auto; line-height: 1;
+  }
+  .c-hero-main u em { font-style: normal; font-size: 14px; opacity: .7; }
+  .c-scale { margin-top: 14px; }
+  .c-scale-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,.18); position: relative; }
+  .c-scale-bar span { position: absolute; inset: 0 auto 0 0; width: 100%; background: #8FE0AC; border-radius: 3px; }
+  .c-scale-bar::after {
+    content: ""; position: absolute; left: 30%; top: -4px; bottom: -4px; width: 2px; background: #F2C755;
+  }
+  .c-scale-legend {
+    display: flex; justify-content: space-between; font-size: 10px; opacity: .78; margin-top: 6px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .c-sec {
+    margin: 20px 16px 8px; font-size: 11px; letter-spacing: .14em; color: #6B7264; font-weight: 700;
+  }
+  .c-rows { margin: 0 16px; display: flex; flex-direction: column; gap: 1px; background: #DFE2D9; border-radius: 12px; overflow: hidden; }
+  .c-row {
+    background: #FFF; padding: 11px 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .c-row b { font-size: 13.5px; font-weight: 700; letter-spacing: .06em; min-width: 46px; }
+  .c-row .c-mini { flex: 1; height: 4px; border-radius: 2px; background: #E7E9E1; position: relative; }
+  .c-row .c-mini span { position: absolute; inset: 0 auto 0 0; background: #9AA694; border-radius: 2px; }
+  .c-row.good .c-mini span { background: #3E8A5B; }
+  .c-row .c-mini::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: #B9C0B2; }
+  .c-row u {
+    text-decoration: none; font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 14px; min-width: 62px; text-align: right; color: #4A5145;
+  }
+  .c-row.good u { color: #23663F; font-weight: 600; }
+  .c-more {
+    margin: 10px 16px 120px; text-align: center; font-size: 12.5px; color: #2A6244;
+    border: 1px solid #C6D2C2; border-radius: 10px; padding: 11px; font-weight: 600; background: #FFF;
+  }
+  .c-dock {
+    position: sticky; bottom: 0; margin-top: -104px;
+    background: rgba(246, 247, 243, .93); backdrop-filter: blur(8px);
+    border-top: 1px solid #DADED2; padding: 10px 16px 16px;
+  }
+  .c-handle { width: 38px; height: 4px; border-radius: 2px; background: #C3C9BC; margin: 0 auto 10px; }
+  .c-dock-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .c-dock-cell {
+    background: #FFF; border: 1px solid #D8DCD2; border-radius: 10px; padding: 6px 10px 7px;
+  }
+  .c-dock-cell i { font-style: normal; display: block; font-size: 9.5px; color: #6B7264; letter-spacing: .1em; }
+  .c-dock-cell b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 600; }
+  .c-dock-cell b em { font-style: normal; font-size: 10px; color: #6B7264; }
+
+  /* =========================================================
+     案D — 1券種フォーカス
+     ========================================================= */
+  .scr-d { background: #14140F; color: #EDEBE0; }
+  .d-top { padding: 6px 18px 10px; font-size: 13px; letter-spacing: .05em; font-weight: 700; }
+  .d-chips {
+    display: flex; gap: 7px; padding: 0 14px 14px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .d-chips::-webkit-scrollbar { display: none; }
+  .d-chip {
+    flex: none; padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700;
+    letter-spacing: .06em; background: #23241C; border: 1px solid #34362A; color: #A9AA98;
+  }
+  .d-chip.on { background: #F2C755; border-color: #F2C755; color: #1B1B12; }
+  .d-panel {
+    margin: 0 14px; border-radius: 16px; background: #1D1E16; border: 1px solid #34362A;
+    padding: 18px 18px 16px;
+  }
+  .d-panel > i { font-style: normal; font-size: 10.5px; letter-spacing: .16em; color: #9A9B87; }
+  .d-big {
+    display: flex; align-items: baseline; gap: 9px; margin-top: 5px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .d-big b { font-size: 40px; font-weight: 600; line-height: 1; letter-spacing: -.02em; }
+  .d-big em { font-style: normal; font-size: 14px; color: #9A9B87; }
+  .d-delta { font-size: 12.5px; color: #7FD09B; margin-top: 7px; font-family: var(--mono); }
+  .d-stats { margin-top: 15px; border-top: 1px solid #34362A; }
+  .d-stat {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 0; border-bottom: 1px solid #34362A; font-size: 12.5px; color: #A9AA98;
+  }
+  .d-stat b { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 14px; color: #EDEBE0; font-weight: 600; }
+  .d-stat b.hit { color: #7FD09B; }
+  .d-chart { margin: 16px 14px 0; border-radius: 16px; background: #1D1E16; border: 1px solid #34362A; padding: 14px 14px 10px; }
+  .d-chart > i { font-style: normal; font-size: 10.5px; letter-spacing: .14em; color: #9A9B87; }
+  .d-chart svg { display: block; width: 100%; height: auto; margin-top: 8px; }
+  .d-chart figcaption { font-size: 10.5px; color: #9A9B87; margin-top: 6px; font-family: var(--mono); }
+  .d-table { margin: 16px 14px 22px; }
+  .d-table > i { font-style: normal; font-size: 10.5px; letter-spacing: .14em; color: #9A9B87; display: block; margin-bottom: 8px; }
+  .d-tr {
+    display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center;
+    padding: 8px 2px; border-bottom: 1px solid #262719; font-size: 12.5px;
+  }
+  .d-tr span { letter-spacing: .06em; font-weight: 700; }
+  .d-tr u { text-decoration: none; font-family: var(--mono); font-variant-numeric: tabular-nums; color: #A9AA98; min-width: 58px; text-align: right; }
+  .d-tr i { font-style: normal; font-size: 11px; color: #74765F; min-width: 26px; text-align: right; }
+  .d-tr.good u { color: #7FD09B; }
+  .d-tr.good i { color: #7FD09B; }
+
+  /* ---------- comparison ---------- */
+  .compare { display: flex; flex-direction: column; gap: 20px; }
+  .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); }
+  table { border-collapse: collapse; width: 100%; min-width: 660px; font-size: 13.5px; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-size: 11.5px; letter-spacing: .12em; color: var(--muted); font-weight: 700;
+    background: var(--surface-2);
+  }
+  tbody th { font-weight: 700; white-space: nowrap; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  td.mark { font-family: var(--mono); font-weight: 700; text-align: center; }
+
+  .verdict {
+    background: var(--accent-soft); border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px; padding: 22px 24px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .verdict h2 { font-size: 20px; }
+  .verdict p { margin: 0; font-size: 14.5px; max-width: 62ch; }
+  .verdict ol { margin: 4px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; font-size: 14px; }
+  .verdict code {
+    font-family: var(--mono); font-size: 12.5px; background: var(--surface);
+    padding: 1px 5px; border-radius: 3px; border: 1px solid var(--line);
+  }
+
+  .foot { font-size: 12.5px; color: var(--muted); }
+  .foot p { margin: 0 0 6px; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="eyebrow">Mobile Redesign · 4 Directions</div>
+    <h1>競馬期待値計算機<br>スマートフォン版レイアウト提案</h1>
+    <p class="lede">
+      現行 <code style="font-family:var(--mono);font-size:13px">oz_cal.py</code> は <span class="num">3</span> カラム前提（<code style="font-family:var(--mono);font-size:13px">layout="wide"</code> ＋ <code style="font-family:var(--mono);font-size:13px">st.columns(3)</code>）で組まれており、スマホ幅では各カラムが <span class="num">100px</span> 前後まで潰れて数値が折り返します。
+      下の <span class="num">4</span> 案はすべて実物の HTML で描いたモックアップです。実際のスクロール・実際の計算値（オッズ <span class="num">20.0</span> 倍／<span class="num">18</span> 頭／掛け金 <span class="num">100</span> 円）が入っているので、そのまま見比べて選んでください。
+    </p>
+  </header>
+
+  <hr class="rule">
+
+  <section class="issues">
+    <h2>4 案に共通して直すこと</h2>
+    <div class="issue-grid">
+      <div class="issue">
+        <b>3 カラム → 1 カラム</b>
+        <p>8 券種を <code style="font-family:var(--mono);font-size:12.5px">st.columns(3)</code> で 3 段に並べる構成をやめ、縦 1 列またはカード 2 列にする。</p>
+        <span class="fix">layout="centered" に変更</span>
+      </div>
+      <div class="issue">
+        <b>ランキングを最上部へ</b>
+        <p>最も価値がある「どの券種が一番割安か」がページ最下部にある。スマホでは最初に見える位置へ。</p>
+        <span class="fix">結論ファースト</span>
+      </div>
+      <div class="issue">
+        <b>入力を常に見える場所に</b>
+        <p>オッズを変えるたびに最上部までスクロールが必要。追従ヘッダーか下部ドックで固定する。</p>
+        <span class="fix">sticky 入力</span>
+      </div>
+      <div class="issue">
+        <b>広告 3 列を 1 列に</b>
+        <p>300×250 バナーが 3 列だと横スクロールが発生。1 列＋折りたたみに変更し、本体の下へ。</p>
+        <span class="fix">横スクロール解消</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============================ 案A ============================ -->
+  <section class="proposal">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen scr-a">
+          <div class="statusbar"><span>13:05</span><span>▮▮▮ 4G</span></div>
+
+          <div class="a-head">
+            <div class="a-brand">期待値カリキュレーター<span>18 HEAD / 100 YEN</span></div>
+            <div class="a-inputs">
+              <div class="a-in"><i>オッズ</i><b>20.0<em>倍</em></b></div>
+              <div class="a-in"><i>頭数</i><b>18<em>頭</em></b></div>
+              <div class="a-in"><i>掛け金</i><b>100<em>円</em></b></div>
+            </div>
+          </div>
+
+          <div class="a-sum">妙味あり <strong>2 / 8</strong> 券種</div>
+
+          <ul class="a-list">
+            <li class="a-row good">
+              <span class="a-name">複勝</span>
+              <span class="a-meta">的中 16.67% ／ 分岐 6.0倍</span>
+              <span class="a-val"><b>333.3<em>%</em></b><i>◎ 割安</i></span>
+              <span class="a-track"><span style="width:100%"></span></span>
+            </li>
+            <li class="a-row good">
+              <span class="a-name">単勝</span>
+              <span class="a-meta">的中 5.56% ／ 分岐 18.0倍</span>
+              <span class="a-val"><b>111.1<em>%</em></b><i>◎ 割安</i></span>
+              <span class="a-track"><span style="width:55.6%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">ワイド</span>
+              <span class="a-meta">的中 3.92% ／ 分岐 25.5倍</span>
+              <span class="a-val"><b>78.4<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:39.2%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">枠連</span>
+              <span class="a-meta">的中 2.78% ／ 分岐 36.0倍</span>
+              <span class="a-val"><b>55.6<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:27.8%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">馬連</span>
+              <span class="a-meta">的中 0.65% ／ 分岐 153.0倍</span>
+              <span class="a-val"><b>13.1<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:6.5%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">馬単</span>
+              <span class="a-meta">的中 0.33% ／ 分岐 306.0倍</span>
+              <span class="a-val"><b>6.5<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:3.3%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">三連複</span>
+              <span class="a-meta">的中 0.12% ／ 分岐 816.0倍</span>
+              <span class="a-val"><b>2.5<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:1.2%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">三連単</span>
+              <span class="a-meta">的中 0.02% ／ 分岐 4896.0倍</span>
+              <span class="a-val"><b>0.4<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:0.2%"></span></span>
+            </li>
+          </ul>
+
+          <div class="a-foot"><span>損益分岐グラフを見る</span><em>→</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-head">
+        <div class="tag-row">
+          <span class="tag">案 A</span>
+          <span class="tag-sub">Odds Board ／ オッズ掲示板</span>
+        </div>
+        <h2>8 券種を 1 列の「掲示板」に積み、回収率順で読ませる</h2>
+      </div>
+      <p>
+        競馬場のオッズ表示板をそのままスマホに落とし込んだ案です。<strong>1 行 = 1 券種</strong>で全幅を使うため、数値が折り返しません。並び順が期待回収率の降順なので、上から読むだけで「どれが割安か」が分かります。
+      </p>
+      <ul class="points">
+        <li>入力 3 項目は上部に追従（sticky）。スクロールしてもオッズを見失わない</li>
+        <li>各行のバーは回収率の視覚化。中央の縦線が <span class="num">100%</span> ライン＝損益分岐</li>
+        <li>ダーク＋アンバーの数値は既存の「競馬」の文脈に最も近い</li>
+        <li>妙味あり券種だけ左端の緑ラインと緑数値で浮き上がる</li>
+      </ul>
+      <dl class="spec">
+        <dt>実装難度</dt><dd class="lv lv-mid">★★☆ 中</dd>
+        <dt>作業内容</dt><dd>行リストは <code style="font-family:var(--mono);font-size:12.5px">st.markdown(unsafe_allow_html=True)</code> で生成。<code style="font-family:var(--mono);font-size:12.5px">show_baken()</code> を HTML 返却関数に置き換え。ダークは <code style="font-family:var(--mono);font-size:12.5px">.streamlit/config.toml</code></dd>
+        <dt>向く人</dt><dd>8 券種を毎回まとめて比較する使い方</dd>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============================ 案B ============================ -->
+  <section class="proposal">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen scr-b">
+          <div class="statusbar" style="color:#6E7061"><span>13:05</span><span>▮▮▮ 4G</span></div>
+
+          <div class="b-head">
+            <b>競馬期待値計算機</b>
+            <span>オッズを入れて、割安な馬券を探す</span>
+          </div>
+
+          <div class="b-form">
+            <div class="b-field">
+              <span>オッズ<i>払戻倍率</i></span>
+              <span class="b-step"><button type="button">−</button><b>20.0</b><button type="button">＋</button></span>
+            </div>
+            <div class="b-field">
+              <span>出馬数<i>頭</i></span>
+              <span class="b-step"><button type="button">−</button><b>18</b><button type="button">＋</button></span>
+            </div>
+            <div class="b-field">
+              <span>掛け金<i>円 / 1点</i></span>
+              <span class="b-step"><button type="button">−</button><b>100</b><button type="button">＋</button></span>
+            </div>
+          </div>
+
+          <div class="b-banner">
+            最も妙味があるのは <b>複勝</b>。<br>期待回収率 <span class="num">333.3%</span>（損益分岐 <span class="num">6.0</span> 倍）。
+          </div>
+
+          <div class="b-grid">
+            <div class="b-card good">
+              <span><i class="b-dot"></i>複勝</span>
+              <strong>333<em>円</em></strong>
+              <span class="b-sub">回収 333.3% ／ 16.67%</span>
+              <span class="b-flag">◎ 割安</span>
+            </div>
+            <div class="b-card good">
+              <span><i class="b-dot"></i>単勝</span>
+              <strong>111<em>円</em></strong>
+              <span class="b-sub">回収 111.1% ／ 5.56%</span>
+              <span class="b-flag">◎ 割安</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>ワイド</span>
+              <strong>78<em>円</em></strong>
+              <span class="b-sub">回収 78.4% ／ 3.92%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>枠連</span>
+              <strong>56<em>円</em></strong>
+              <span class="b-sub">回収 55.6% ／ 2.78%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>馬連</span>
+              <strong>13<em>円</em></strong>
+              <span class="b-sub">回収 13.1% ／ 0.65%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>馬単</span>
+              <strong>7<em>円</em></strong>
+              <span class="b-sub">回収 6.5% ／ 0.33%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>三連複</span>
+              <strong>2<em>円</em></strong>
+              <span class="b-sub">回収 2.5% ／ 0.12%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>三連単</span>
+              <strong>0<em>円</em></strong>
+              <span class="b-sub">回収 0.4% ／ 0.02%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-head">
+        <div class="tag-row">
+          <span class="tag">案 B</span>
+          <span class="tag-sub">Bet Slip ／ マークシート</span>
+        </div>
+        <h2>紙のマークシートの手触りで、2 列カードに整理する</h2>
+      </div>
+      <p>
+        現行の見た目・情報量をいちばん保ったまま、スマホ幅に収める案です。<strong>入力は大きなステッパー</strong>（タップ領域 <span class="num">34px</span> 角）にして、数字キーボードを開かずにオッズを動かせるようにしています。結果は 2 列カードで、1 画面に 4 券種が収まります。
+      </p>
+      <ul class="points">
+        <li>Streamlit 標準部品の組み合わせだけでほぼ再現でき、改修が最も軽い</li>
+        <li>ライト基調のため、既存ユーザーが受ける印象の変化が小さい</li>
+        <li>「期待値（円）」を主役の数字にしているので、いくら儲かるかが直感的</li>
+        <li>上部バナーで結論（最も妙味のある券種）を先に示す</li>
+      </ul>
+      <dl class="spec">
+        <dt>実装難度</dt><dd class="lv lv-easy">★☆☆ 低</dd>
+        <dt>作業内容</dt><dd><code style="font-family:var(--mono);font-size:12.5px">st.columns(3)</code> → <code style="font-family:var(--mono);font-size:12.5px">st.columns(2)</code>、<code style="font-family:var(--mono);font-size:12.5px">st.number_input</code> の <code style="font-family:var(--mono);font-size:12.5px">step</code> 指定、カード枠の CSS 追加のみ</dd>
+        <dt>向く人</dt><dd>今の使い勝手を変えたくない・最短で直したい</dd>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============================ 案C ============================ -->
+  <section class="proposal">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen scr-c">
+          <div class="statusbar" style="color:#6B7264"><span>13:05</span><span>▮▮▮ 4G</span></div>
+
+          <div class="c-top"><b>期待値計算機</b><span>18頭・100円</span></div>
+
+          <div class="c-hero">
+            <i>いま最も妙味がある馬券</i>
+            <div class="c-hero-main">
+              <b>複勝</b>
+              <u>333.3<em>%</em></u>
+            </div>
+            <div class="c-scale">
+              <div class="c-scale-bar"><span style="width:100%"></span></div>
+              <div class="c-scale-legend"><span>0%</span><span>損益分岐 100%</span><span>333%</span></div>
+            </div>
+          </div>
+
+          <div class="c-sec">全 8 券種（回収率順）</div>
+          <div class="c-rows">
+            <div class="c-row good"><b>複勝</b><span class="c-mini"><span style="width:100%"></span></span><u>333.3%</u></div>
+            <div class="c-row good"><b>単勝</b><span class="c-mini"><span style="width:55.6%"></span></span><u>111.1%</u></div>
+            <div class="c-row"><b>ワイド</b><span class="c-mini"><span style="width:39.2%"></span></span><u>78.4%</u></div>
+            <div class="c-row"><b>枠連</b><span class="c-mini"><span style="width:27.8%"></span></span><u>55.6%</u></div>
+            <div class="c-row"><b>馬連</b><span class="c-mini"><span style="width:6.5%"></span></span><u>13.1%</u></div>
+            <div class="c-row"><b>馬単</b><span class="c-mini"><span style="width:3.3%"></span></span><u>6.5%</u></div>
+            <div class="c-row"><b>三連複</b><span class="c-mini"><span style="width:1.2%"></span></span><u>2.5%</u></div>
+            <div class="c-row"><b>三連単</b><span class="c-mini"><span style="width:0.2%"></span></span><u>0.4%</u></div>
+          </div>
+
+          <div class="c-more">損益分岐グラフ・詳細を開く</div>
+
+          <div class="c-dock">
+            <div class="c-handle"></div>
+            <div class="c-dock-row">
+              <div class="c-dock-cell"><i>オッズ</i><b>20.0<em>倍</em></b></div>
+              <div class="c-dock-cell"><i>頭数</i><b>18<em>頭</em></b></div>
+              <div class="c-dock-cell"><i>掛け金</i><b>100<em>円</em></b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-head">
+        <div class="tag-row">
+          <span class="tag">案 C</span>
+          <span class="tag-sub">Hero &amp; Dock ／ 結論先出し＋下部入力</span>
+        </div>
+        <h2>結論を巨大なヒーローで見せ、入力は親指の届く下部に置く</h2>
+      </div>
+      <p>
+        ネイティブアプリに最も近い操作感の案です。<strong>入力ドックを画面下端に固定</strong>するので、片手で持ったまま親指だけでオッズを動かし、上のヒーローの数字がその場で変わるのを見られます。レース直前にスマホ片手で使う場面を想定しています。
+      </p>
+      <ul class="points">
+        <li>ヒーローカードは「複勝 / 333.3%」だけを大きく。迷わせない</li>
+        <li>ヒーロー下のバーは損益分岐（黄色い縦線）に対しどれだけ上回ったかを表す</li>
+        <li>一覧はミニバー付きの薄い行に圧縮し、詳細は下の展開へ逃がす</li>
+        <li>4 案の中で最も「アプリらしい」が、その分 Streamlit からは離れる</li>
+      </ul>
+      <dl class="spec">
+        <dt>実装難度</dt><dd class="lv lv-hard">★★★ 高</dd>
+        <dt>作業内容</dt><dd>下部固定は <code style="font-family:var(--mono);font-size:12.5px">position:fixed</code> の CSS ハックが必要で、Streamlit の再実行時にレイアウトが崩れやすい。iOS Safari のセーフエリア対応も要</dd>
+        <dt>向く人</dt><dd>レース直前に片手でオッズを何度も入れ直す使い方</dd>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============================ 案D ============================ -->
+  <section class="proposal">
+    <div class="stage">
+      <div class="phone">
+        <div class="screen scr-d">
+          <div class="statusbar"><span>13:05</span><span>▮▮▮ 4G</span></div>
+
+          <div class="d-top">馬券をひとつ選ぶ</div>
+          <div class="d-chips">
+            <span class="d-chip">単勝</span>
+            <span class="d-chip on">複勝</span>
+            <span class="d-chip">ワイド</span>
+            <span class="d-chip">枠連</span>
+            <span class="d-chip">馬連</span>
+            <span class="d-chip">馬単</span>
+            <span class="d-chip">三連複</span>
+          </div>
+
+          <div class="d-panel">
+            <i>複勝 ／ 期待値</i>
+            <div class="d-big"><b>333.33</b><em>円</em></div>
+            <div class="d-delta">▲ +233.33 円（掛け金 100 円に対して）</div>
+            <div class="d-stats">
+              <div class="d-stat"><span>的中確率</span><b>16.67 %</b></div>
+              <div class="d-stat"><span>損益分岐オッズ</span><b>6.00 倍</b></div>
+              <div class="d-stat"><span>入力オッズ</span><b>20.00 倍</b></div>
+              <div class="d-stat" style="border-bottom:0"><span>判定</span><b class="hit">◎ 妙味あり</b></div>
+            </div>
+          </div>
+
+          <figure class="d-chart">
+            <i>損益分岐グラフ</i>
+            <svg viewBox="0 0 300 148" role="img" aria-label="複勝の期待値とオッズの関係。オッズ6.0倍で損益分岐、入力20.0倍で期待値333円">
+              <defs>
+                <linearGradient id="dgrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#7FD09B" stop-opacity=".38"></stop>
+                  <stop offset="100%" stop-color="#7FD09B" stop-opacity="0"></stop>
+                </linearGradient>
+              </defs>
+              <g stroke="#2E3025" stroke-width="1">
+                <line x1="0" y1="35" x2="300" y2="35"></line>
+                <line x1="0" y1="70" x2="300" y2="70"></line>
+                <line x1="0" y1="140" x2="300" y2="140"></line>
+              </g>
+              <polygon points="75,105 300,0 300,105" fill="url(#dgrad)"></polygon>
+              <line x1="0" y1="105" x2="300" y2="105" stroke="#9A9B87" stroke-width="1" stroke-dasharray="4 4"></line>
+              <line x1="75" y1="0" x2="75" y2="140" stroke="#F2C755" stroke-width="1" stroke-dasharray="3 3"></line>
+              <line x1="0" y1="140" x2="300" y2="0" stroke="#7FD09B" stroke-width="2" stroke-linecap="round"></line>
+              <circle cx="250" cy="23" r="4.5" fill="#14140F" stroke="#EDEBE0" stroke-width="2"></circle>
+              <text x="243" y="16" text-anchor="end" fill="#EDEBE0" font-size="9" font-family="ui-monospace, monospace">20.0倍 / 333円</text>
+              <text x="79" y="136" fill="#F2C755" font-size="9" font-family="ui-monospace, monospace">分岐 6.0倍</text>
+              <text x="4" y="101" fill="#9A9B87" font-size="9" font-family="ui-monospace, monospace">掛け金 100円</text>
+            </svg>
+            <figcaption>オッズ 6.0 倍を超えると期待値プラス</figcaption>
+          </figure>
+
+          <div class="d-table">
+            <i>ほかの券種と比べる（回収率）</i>
+            <div class="d-tr good"><span>複勝</span><u>333.3%</u><i>◎</i></div>
+            <div class="d-tr good"><span>単勝</span><u>111.1%</u><i>◎</i></div>
+            <div class="d-tr"><span>ワイド</span><u>78.4%</u><i>×</i></div>
+            <div class="d-tr"><span>枠連</span><u>55.6%</u><i>×</i></div>
+            <div class="d-tr"><span>馬連</span><u>13.1%</u><i>×</i></div>
+            <div class="d-tr"><span>馬単</span><u>6.5%</u><i>×</i></div>
+            <div class="d-tr"><span>三連複</span><u>2.5%</u><i>×</i></div>
+            <div class="d-tr" style="border-bottom:0"><span>三連単</span><u>0.4%</u><i>×</i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief">
+      <div class="brief-head">
+        <div class="tag-row">
+          <span class="tag">案 D</span>
+          <span class="tag-sub">Single Focus ／ 1 券種フォーカス</span>
+        </div>
+        <h2>券種をチップで 1 つ選び、その 1 枚だけを深く見せる</h2>
+      </div>
+      <p>
+        情報量を減らす方向の案です。<strong>横スクロールのチップで券種を切り替え</strong>、選んだ 1 券種の期待値・確率・損益分岐・グラフを 1 画面に集約します。既存の <code style="font-family:var(--mono);font-size:12.5px">breakeven_chart()</code> をそのまま主役に据えられるのが利点です。
+      </p>
+      <ul class="points">
+        <li>数字が大きく、スマホでいちばん読みやすい</li>
+        <li>グラフが「おまけのタブ」ではなく主役の位置に来る</li>
+        <li>一覧性は落ちるので、下部に回収率だけの比較表を添えて補う</li>
+        <li><code style="font-family:var(--mono);font-size:12.5px">st.segmented_control</code> でチップをほぼそのまま実装できる</li>
+      </ul>
+      <dl class="spec">
+        <dt>実装難度</dt><dd class="lv lv-easy">★☆☆ 低</dd>
+        <dt>作業内容</dt><dd>タブ 2 つを統合し、<code style="font-family:var(--mono);font-size:12.5px">st.segmented_control(BET_TYPES)</code> ＋ <code style="font-family:var(--mono);font-size:12.5px">st.metric</code> ＋ 既存グラフ関数。matplotlib は <code style="font-family:var(--mono);font-size:12.5px">figsize</code> を縦長に調整</dd>
+        <dt>向く人</dt><dd>買う券種が決まっていて、その 1 点を検証したい</dd>
+      </dl>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============================ 比較 ============================ -->
+  <section class="compare">
+    <h2>4 案の比較</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>観点</th>
+            <th>A 掲示板</th>
+            <th>B マークシート</th>
+            <th>C ヒーロー＋ドック</th>
+            <th>D 1 券種フォーカス</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>8 券種の一覧性</th><td class="mark">◎</td><td class="mark">◎</td><td class="mark">○</td><td class="mark">△</td></tr>
+          <tr><th>数値の読みやすさ</th><td class="mark">◎</td><td class="mark">○</td><td class="mark">○</td><td class="mark">◎</td></tr>
+          <tr><th>片手操作</th><td class="mark">○</td><td class="mark">△</td><td class="mark">◎</td><td class="mark">○</td></tr>
+          <tr><th>1 画面に入る情報量</th><td class="mark">◎</td><td class="mark">○</td><td class="mark">◎</td><td class="mark">△</td></tr>
+          <tr><th>Streamlit での実装しやすさ</th><td class="mark">○</td><td class="mark">◎</td><td class="mark">△</td><td class="mark">◎</td></tr>
+          <tr><th>既存ユーザーへの変化の少なさ</th><td class="mark">△</td><td class="mark">◎</td><td class="mark">△</td><td class="mark">○</td></tr>
+          <tr><th>グラフとの相性</th><td class="mark">○</td><td class="mark">△</td><td class="mark">○</td><td class="mark">◎</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="verdict">
+    <h2>おすすめは A（掲示板）をベースに、D をタブとして併設</h2>
+    <p>
+      このアプリの一番の価値は「8 券種を一度に比べて、どれが割安かを知る」ことです。A はそれを 1 列レイアウトで最も忠実にスマホへ移せます。そのうえで、券種を決めた人向けの深掘りとして D を 2 つ目のタブに置けば、現行の「期待値計算 / 損益分岐グラフ」というタブ構成をそのまま活かせます。
+    </p>
+    <ol>
+      <li><code>layout="wide"</code> → <code>layout="centered"</code>、<code>initial_sidebar_state="collapsed"</code> に変更</li>
+      <li><code>show_baken()</code> を 1 行カード HTML を返す関数に置き換え、回収率降順で描画</li>
+      <li>入力 3 項目を <code>st.columns(3)</code> ＋ sticky CSS で上部に固定</li>
+      <li>2 つ目のタブを D の 1 券種フォーカス（<code>st.segmented_control</code> ＋ 既存グラフ）に差し替え</li>
+      <li>アフィリエイト枠を 3 列 → 1 列に変更し、<code>st.expander</code> で折りたたむ</li>
+    </ol>
+    <p><strong>どの案で進めるか教えてください。</strong>A / B / C / D の単独でも、「A の一覧＋B の入力ステッパー」のような組み合わせでも実装できます。決まり次第 <code>oz_cal.py</code> を書き換えます。</p>
+  </section>
+
+  <div class="foot">
+    <p>モックアップ内の数値はすべて実際の計算式（<code style="font-family:var(--mono)">baken_metrics()</code>）に基づく実値です。条件：オッズ 20.0 倍／18 頭／掛け金 100 円。</p>
+    <p>端末フレーム内はスクロールできます。実機幅 372px 相当で描画しています。</p>
+  </div>
+
+</div>
