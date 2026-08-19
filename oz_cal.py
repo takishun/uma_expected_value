@@ -24,6 +24,7 @@ except ImportError:
     pass
 
 GRID_COLUMNS = 3  # 期待値カードを並べる列数
+MEMO_MARKS = ['', '◎', '◯', '△', '▲', '✕', '？']  # 馬メモの評価印（先頭の空欄＝未評価）
 
 
 def render_metric_card(col, metrics: baken.BakenMetrics, bet: int) -> None:
@@ -131,6 +132,7 @@ def render_guide() -> None:
     with st.expander('🆕 更新内容', expanded=False):
         st.markdown(
             """
+            - **2026/08/18** 馬メモ（評価印・メモ）のタブを追加。1〜18番に◎◯△▲✕？を付けてCSV出力できます。
             - **2026/08/11** 的中確率の計算を見直しました。表示される確率・期待値・
               損益分岐オッズの値が以前と変わっています。
                 - **ワイド** の的中確率が実際の2倍に表示されていた誤りを修正しました
@@ -207,6 +209,47 @@ def render_chart_tab(odds: float, bet: int, horses: int) -> None:
     )
 
 
+def render_memo_tab() -> None:
+    """1〜18番の各馬に評価印とメモを記入できるメモ機能のタブを描画する。"""
+    st.subheader('📝 馬メモ')
+    st.caption(
+        '各馬（1〜18番）に評価印（◎◯△▲✕？）とメモを記入できます。'
+        '印は選択式で自由入力はできません。「表をリセット」で全消去、「CSV出力」で書き出せます。'
+    )
+
+    # リセットは data_editor の key を作り直して中身を初期化することで実現する
+    if 'memo_version' not in st.session_state:
+        st.session_state.memo_version = 0
+    if st.button('🗑 表をリセット', key='memo_reset'):
+        st.session_state.memo_version += 1  # 以降で新しい key の editor が生成され空になる
+
+    base = pd.DataFrame(
+        {
+            '馬番': list(range(1, baken.MAX_FIELD_SIZE + 1)),
+            '印': [''] * baken.MAX_FIELD_SIZE,
+            'メモ': [''] * baken.MAX_FIELD_SIZE,
+        }
+    )
+    edited = st.data_editor(
+        base,
+        hide_index=True,
+        num_rows='fixed',
+        use_container_width=True,
+        column_config={
+            '馬番': st.column_config.NumberColumn(disabled=True, width='small'),
+            '印': st.column_config.SelectboxColumn(options=MEMO_MARKS, width='small'),
+            'メモ': st.column_config.TextColumn(width='large'),
+        },
+        key=f'memo_editor_{st.session_state.memo_version}',
+    )
+
+    csv = edited.to_csv(index=False).encode('utf-8-sig')  # Excel対応（BOM付きUTF-8）
+    st.download_button(
+        '⬇ CSV出力', data=csv, file_name='horse_memo.csv',
+        mime='text/csv', key='memo_csv',
+    )
+
+
 def render_footer() -> None:
     """作成者情報とお問い合わせ先を表示する。"""
     st.text('作成者:eta')
@@ -242,13 +285,17 @@ def main() -> None:
 
     results = baken.calculate_all(odds, bet, horses)
 
-    calc_tab, chart_tab = st.tabs(['📊 期待値計算', '📈 損益分岐グラフ'])
+    calc_tab, chart_tab, memo_tab = st.tabs(
+        ['📊 期待値計算', '📈 損益分岐グラフ', '📝 馬メモ']
+    )
     with calc_tab:
         render_metric_grid(results, bet)
         st.write('---')
         render_ranking(results)
     with chart_tab:
         render_chart_tab(odds, bet, horses)
+    with memo_tab:
+        render_memo_tab()
 
     st.write('---')
     affiliates.render_banners()
