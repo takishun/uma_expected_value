@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-"""競馬期待値計算機(Streamlitアプリ)のエントリポイント。
+"""馬券バリューチェッカー(Streamlitアプリ)のエントリポイント。
 
     streamlit run oz_cal.py
 
@@ -132,6 +132,7 @@ def render_guide() -> None:
     with st.expander('🆕 更新内容', expanded=False):
         st.markdown(
             """
+            - **2026/08/19** アプリ名を「馬券バリューチェッカー」に変更しました。
             - **2026/08/18** 馬メモ（評価印・メモ）のタブを追加。1〜18番に◎◯△▲✕？を付けてCSV出力できます。
             - **2026/08/11** 的中確率の計算を見直しました。表示される確率・期待値・
               損益分岐オッズの値が以前と変わっています。
@@ -264,13 +265,13 @@ def render_footer() -> None:
 
 def main() -> None:
     st.set_page_config(
-        page_title='競馬期待値カリキュレーター',
+        page_title='馬券バリューチェッカー',
         page_icon='uma_icon.png',
         initial_sidebar_state='expanded',
         layout='wide',
     )
 
-    st.title('競馬期待値計算機')
+    st.title('馬券バリューチェッカー')
     st.caption(
         'オッズ・出馬数・掛け金を入力すると、馬券の種類ごとに期待値と'
         '「妙味（割安かどうか）」を計算します。'

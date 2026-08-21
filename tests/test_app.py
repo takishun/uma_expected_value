@@ -26,7 +26,7 @@ def run_app(odds=None, horses=None, bet=None) -> AppTest:
 
 def test_初期表示で例外が出ない():
     app = run_app()
-    assert app.title[0].value == '競馬期待値計算機'
+    assert app.title[0].value == '馬券バリューチェッカー'
 
 
 @pytest.mark.parametrize('horses', range(baken.MIN_FIELD_SIZE, baken.MAX_FIELD_SIZE + 1))
