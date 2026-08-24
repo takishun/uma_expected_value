@@ -525,16 +525,16 @@
               <span class="a-track"><span style="width:55.6%"></span></span>
             </li>
             <li class="a-row">
-              <span class="a-name">ワイド</span>
-              <span class="a-meta">的中 3.92% ／ 分岐 25.5倍</span>
-              <span class="a-val"><b>78.4<em>%</em></b><i>× 割高</i></span>
-              <span class="a-track"><span style="width:39.2%"></span></span>
-            </li>
-            <li class="a-row">
               <span class="a-name">枠連</span>
               <span class="a-meta">的中 2.78% ／ 分岐 36.0倍</span>
               <span class="a-val"><b>55.6<em>%</em></b><i>× 割高</i></span>
               <span class="a-track"><span style="width:27.8%"></span></span>
+            </li>
+            <li class="a-row">
+              <span class="a-name">ワイド</span>
+              <span class="a-meta">的中 1.96% ／ 分岐 51.0倍</span>
+              <span class="a-val"><b>39.2<em>%</em></b><i>× 割高</i></span>
+              <span class="a-track"><span style="width:19.6%"></span></span>
             </li>
             <li class="a-row">
               <span class="a-name">馬連</span>
@@ -639,15 +639,15 @@
               <span class="b-flag">◎ 割安</span>
             </div>
             <div class="b-card">
-              <span><i class="b-dot"></i>ワイド</span>
-              <strong>78<em>円</em></strong>
-              <span class="b-sub">回収 78.4% ／ 3.92%</span>
-              <span class="b-flag">× 割高</span>
-            </div>
-            <div class="b-card">
               <span><i class="b-dot"></i>枠連</span>
               <strong>56<em>円</em></strong>
               <span class="b-sub">回収 55.6% ／ 2.78%</span>
+              <span class="b-flag">× 割高</span>
+            </div>
+            <div class="b-card">
+              <span><i class="b-dot"></i>ワイド</span>
+              <strong>39<em>円</em></strong>
+              <span class="b-sub">回収 39.2% ／ 1.96%</span>
               <span class="b-flag">× 割高</span>
             </div>
             <div class="b-card">
@@ -731,8 +731,8 @@
           <div class="c-rows">
             <div class="c-row good"><b>複勝</b><span class="c-mini"><span style="width:100%"></span></span><u>333.3%</u></div>
             <div class="c-row good"><b>単勝</b><span class="c-mini"><span style="width:55.6%"></span></span><u>111.1%</u></div>
-            <div class="c-row"><b>ワイド</b><span class="c-mini"><span style="width:39.2%"></span></span><u>78.4%</u></div>
             <div class="c-row"><b>枠連</b><span class="c-mini"><span style="width:27.8%"></span></span><u>55.6%</u></div>
+            <div class="c-row"><b>ワイド</b><span class="c-mini"><span style="width:19.6%"></span></span><u>39.2%</u></div>
             <div class="c-row"><b>馬連</b><span class="c-mini"><span style="width:6.5%"></span></span><u>13.1%</u></div>
             <div class="c-row"><b>馬単</b><span class="c-mini"><span style="width:3.3%"></span></span><u>6.5%</u></div>
             <div class="c-row"><b>三連複</b><span class="c-mini"><span style="width:1.2%"></span></span><u>2.5%</u></div>
@@ -840,8 +840,8 @@
             <i>ほかの券種と比べる（回収率）</i>
             <div class="d-tr good"><span>複勝</span><u>333.3%</u><i>◎</i></div>
             <div class="d-tr good"><span>単勝</span><u>111.1%</u><i>◎</i></div>
-            <div class="d-tr"><span>ワイド</span><u>78.4%</u><i>×</i></div>
             <div class="d-tr"><span>枠連</span><u>55.6%</u><i>×</i></div>
+            <div class="d-tr"><span>ワイド</span><u>39.2%</u><i>×</i></div>
             <div class="d-tr"><span>馬連</span><u>13.1%</u><i>×</i></div>
             <div class="d-tr"><span>馬単</span><u>6.5%</u><i>×</i></div>
             <div class="d-tr"><span>三連複</span><u>2.5%</u><i>×</i></div>
@@ -906,22 +906,23 @@
   </section>
 
   <section class="verdict">
-    <h2>おすすめは A（掲示板）をベースに、D をタブとして併設</h2>
+    <h2>決定：案 A（オッズ掲示板）を採用・実装済み</h2>
     <p>
-      このアプリの一番の価値は「8 券種を一度に比べて、どれが割安かを知る」ことです。A はそれを 1 列レイアウトで最も忠実にスマホへ移せます。そのうえで、券種を決めた人向けの深掘りとして D を 2 つ目のタブに置けば、現行の「期待値計算 / 損益分岐グラフ」というタブ構成をそのまま活かせます。
+      このアプリの一番の価値は「8 券種を一度に比べて、どれが割安かを知る」ことです。案 A はそれを 1 列レイアウトで最も忠実にスマホへ移せるため、これを採用しました。実装内容は次のとおりです。
     </p>
     <ol>
       <li><code>layout="wide"</code> → <code>layout="centered"</code>、<code>initial_sidebar_state="collapsed"</code> に変更</li>
-      <li><code>show_baken()</code> を 1 行カード HTML を返す関数に置き換え、回収率降順で描画</li>
-      <li>入力 3 項目を <code>st.columns(3)</code> ＋ sticky CSS で上部に固定</li>
-      <li>2 つ目のタブを D の 1 券種フォーカス（<code>st.segmented_control</code> ＋ 既存グラフ）に差し替え</li>
+      <li>3 列の期待値カードを廃止し、期待回収率の降順に並ぶ 1 行カードの一覧に置き換え</li>
+      <li>入力 3 項目を <code>st.columns(3)</code> ＋ sticky CSS で画面上部に固定</li>
+      <li>配色とスタイルを <code>theme.py</code> と <code>.streamlit/config.toml</code> に集約（ダーク基調）</li>
+      <li>損益分岐グラフをダーク配色・縦長比率に調整</li>
       <li>アフィリエイト枠を 3 列 → 1 列に変更し、<code>st.expander</code> で折りたたむ</li>
     </ol>
-    <p><strong>どの案で進めるか教えてください。</strong>A / B / C / D の単独でも、「A の一覧＋B の入力ステッパー」のような組み合わせでも実装できます。決まり次第 <code>oz_cal.py</code> を書き換えます。</p>
+    <p>案 B・C・D は不採用ですが、検討の記録として残しています。</p>
   </section>
 
   <div class="foot">
-    <p>モックアップ内の数値はすべて実際の計算式（<code style="font-family:var(--mono)">baken_metrics()</code>）に基づく実値です。条件：オッズ 20.0 倍／18 頭／掛け金 100 円。</p>
+    <p>モックアップ内の数値はすべて実際の計算式（<code style="font-family:var(--mono)">baken.calculate()</code>）に基づく実値です。条件：オッズ 20.0 倍／18 頭／掛け金 100 円。</p>
     <p>端末フレーム内はスクロールできます。実機幅 372px 相当で描画しています。</p>
   </div>
 

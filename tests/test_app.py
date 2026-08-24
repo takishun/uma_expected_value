@@ -34,13 +34,26 @@ def test_どの頭数でも例外が出ない(horses):
     run_app(horses=horses)
 
 
-def test_発売される式別の数だけ期待値カードが並ぶ():
+def ranking_markup(app: AppTest) -> str:
+    """式別一覧として書き出されたHTMLを1つの文字列にまとめて返す。"""
+    return '\n'.join(md.value for md in app.markdown)
+
+
+def test_発売される式別の数だけカードが並ぶ():
     app = run_app(horses=8)
-    expected = baken.available_bet_types(8)
-    headers = [h.value for h in app.subheader]
-    for name in expected:
-        assert name in headers
-    assert '枠連' not in headers
+    markup = ranking_markup(app)
+    for name in baken.available_bet_types(8):
+        assert f'class="ev-name">{name}<' in markup
+    # 8頭立てでは枠連は発売されないのでカードも出ない
+    assert 'class="ev-name">枠連<' not in markup
+
+
+def test_妙味のある式別だけが強調される():
+    app = run_app(horses=18, odds=5000.0)
+    markup = ranking_markup(app)
+    # 妙味ありのカードは is-value が付き、判定も「割安」になる
+    assert 'ev-row is-value' in markup
+    assert '◎ 割安' in markup
 
 
 def test_妙味ランキングは期待回収率の高い順に並ぶ():
