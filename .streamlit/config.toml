@@ -1,0 +1,12 @@
+# 案A「オッズ掲示板」のダーク基調に合わせたテーマ設定。
+# oz_cal.py の inject_styles() が使う色と対応させている。
+[theme]
+base = "dark"
+primaryColor = "#7FD09B"
+backgroundColor = "#0D110C"
+secondaryBackgroundColor = "#171E16"
+textColor = "#E3E8DE"
+
+[client]
+# 公開アプリなので開発者向けメニューは隠す（ヘッダーはCSS側でも非表示にしている）
+toolbarMode = "minimal"

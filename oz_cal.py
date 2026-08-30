@@ -4,9 +4,15 @@
 
     streamlit run oz_cal.py
 
-確率・期待値の計算は baken.py、広告の描画は affiliates.py が担当し、
+確率・期待値の計算は baken.py、広告の描画は affiliates.py、
+スマートフォン向けの配色とスタイルは theme.py が担当し、
 このファイルは画面の組み立てに専念する。
+
+画面はスマートフォンを基準に組んでいる(design/mobile-layout-proposals.html の案A)。
+1行=1式別のカードを期待回収率の高い順に縦へ積み、入力欄は画面上部に固定する。
 """
+
+import html
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -15,6 +21,7 @@ import streamlit as st
 
 import affiliates
 import baken
+import theme
 
 try:
     # matplotlibに日本語フォントを設定する。グラフのラベル表示にしか関わらないので、
@@ -23,33 +30,9 @@ try:
 except ImportError:
     pass
 
-GRID_COLUMNS = 3  # 期待値カードを並べる列数
 MEMO_MARKS = ['', '◎', '◯', '△', '▲', '✕', '？']  # 馬メモの評価印（先頭の空欄＝未評価）
 
-
-def render_metric_card(col, metrics: baken.BakenMetrics, bet: int) -> None:
-    """1つの式別の期待値・的中確率・妙味判定を1列分表示する。"""
-    col.subheader(metrics.name)
-    col.metric(
-        label=f'{metrics.name}期待値',
-        value=round(metrics.expected_value, 2),
-        delta=round(metrics.expected_value - bet, 2),
-        help='期待値と、掛け金との差額。差額がプラスなら期待値プラスです。',
-    )
-    col.write(f'確率　{metrics.probability:.2f}%')
-    col.write(f'損益分岐オッズ　{metrics.fair_odds:.2f}倍')
-    if metrics.is_value:
-        col.success('妙味あり（割安）')
-    else:
-        col.warning('妙味なし（割高）')
-
-
-def render_metric_grid(results: list[baken.BakenMetrics], bet: int) -> None:
-    """全式別の期待値カードをグリッド状に並べる。"""
-    for start in range(0, len(results), GRID_COLUMNS):
-        cols = st.columns(GRID_COLUMNS)
-        for col, metrics in zip(cols, results[start:start + GRID_COLUMNS]):
-            render_metric_card(col, metrics, bet)
+DEFAULT_ODDS = 20.00  # 初期表示で妙味あり・なしが混ざり、見方が伝わる値にしておく
 
 
 def ranking_table(results: list[baken.BakenMetrics]) -> pd.DataFrame:
@@ -66,6 +49,45 @@ def ranking_table(results: list[baken.BakenMetrics]) -> pd.DataFrame:
     )
 
 
+def ranking_rows_html(results: list[baken.BakenMetrics]) -> str:
+    """式別カードを縦に積んだ一覧のHTMLを組み立てる。
+
+    Streamlitの標準部品では1行に「式別名・内訳・期待回収率・バー」を
+    収めきれないため、この一覧だけHTMLを直接書き出している。
+    """
+    rows = []
+    for metrics in results:
+        modifier = ' is-value' if metrics.is_value else ''
+        judgement = '◎ 割安' if metrics.is_value else '× 割高'
+        # 狭い画面でも1行に収まるよう、左側は的中確率と損益分岐オッズだけにする
+        meta = f'的中 {metrics.probability:.2f}%・分岐 {metrics.fair_odds:.1f}倍'
+        rows.append(
+            f'<li class="ev-row{modifier}">'
+            f'<span class="ev-name">{html.escape(metrics.name)}</span>'
+            f'<span class="ev-meta">{html.escape(meta)}</span>'
+            f'<span class="ev-value">'
+            f'<b>{metrics.payout_rate:.1f}<em>%</em></b>'
+            f'<i>{judgement}</i>'
+            f'<u>期待値 {metrics.expected_value:.0f}円</u>'
+            f'</span>'
+            f'<span class="ev-track">'
+            f'<span style="width:{theme.bar_width(metrics.payout_rate):.1f}%"></span>'
+            f'</span>'
+            f'</li>'
+        )
+    return f'<ul class="ev-list">{"".join(rows)}</ul>'
+
+
+def summary_html(results: list[baken.BakenMetrics]) -> str:
+    """「妙味あり N / M 券種」のサマリー行のHTMLを組み立てる。"""
+    hits = sum(1 for metrics in results if metrics.is_value)
+    css_class = '' if hits else ' class="ev-summary-flat"'
+    return (
+        f'<div class="ev-summary">妙味あり '
+        f'<strong{css_class}>{hits} / {len(results)}</strong> 券種</div>'
+    )
+
+
 def breakeven_chart(name: str, odds: float, bet: int, horses: int):
     """期待値 vs オッズ を描画し、損益分岐オッズと利益ゾーンを示す。"""
     metrics = baken.calculate(name, odds, bet, horses)
@@ -75,26 +97,42 @@ def breakeven_chart(name: str, odds: float, bet: int, horses: int):
     xs = np.linspace(0, x_max, 200)
     ys = bet * xs * probability / 100  # 各オッズでの期待値(円)
 
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.plot(xs, ys, color='#1f77b4', label='期待値')
-    ax.axhline(bet, color='gray', linestyle='--', label=f'掛け金 {bet}円（損益分岐）')
-    ax.axvline(fair_odds, color='red', linestyle=':', label=f'損益分岐オッズ {fair_odds:.1f}倍')
-    ax.fill_between(xs, bet, ys, where=(ys >= bet), color='green', alpha=0.15, label='利益ゾーン')
+    palette = theme.PALETTE
+    # スマートフォンの画面幅に収まる比率にし、暗い背景になじむ配色にする
+    fig, ax = plt.subplots(figsize=(5.6, 4.2))
+    fig.patch.set_facecolor(palette['card'])
+    ax.set_facecolor(palette['card'])
 
-    ax.scatter([odds], [metrics.expected_value], color='black', zorder=5)
+    ax.plot(xs, ys, color=palette['green'], linewidth=2, label='期待値')
+    ax.axhline(bet, color=palette['muted'], linestyle='--', linewidth=1,
+               label=f'掛け金 {bet}円（損益分岐）')
+    ax.axvline(fair_odds, color=palette['amber'], linestyle=':', linewidth=1.2,
+               label=f'損益分岐オッズ {fair_odds:.1f}倍')
+    ax.fill_between(xs, bet, ys, where=(ys >= bet), color=palette['green'], alpha=0.18,
+                    label='利益ゾーン')
+
+    ax.scatter([odds], [metrics.expected_value], color=palette['text'],
+               edgecolors=palette['card'], linewidths=1.5, zorder=5)
     ax.annotate(
         f'入力オッズ {odds:.1f}倍\n期待値 {metrics.expected_value:.1f}円',
         (odds, metrics.expected_value),
         textcoords='offset points',
-        xytext=(10, 10),
+        xytext=(8, 8),
         fontsize=8,
+        color=palette['text'],
     )
 
-    ax.set_xlabel('オッズ（倍）')
-    ax.set_ylabel('期待値（円）')
-    ax.set_title(f'{name} の損益分岐グラフ（{horses}頭・掛け金{bet}円）')
-    ax.legend(loc='upper left', fontsize=8)
-    ax.grid(alpha=0.3)
+    ax.set_xlabel('オッズ（倍）', color=palette['muted'], fontsize=9)
+    ax.set_ylabel('期待値（円）', color=palette['muted'], fontsize=9)
+    ax.set_title(f'{name}（{horses}頭・掛け金{bet}円）', color=palette['text'], fontsize=11)
+    ax.tick_params(colors=palette['muted'], labelsize=8)
+    for spine in ax.spines.values():
+        spine.set_color(palette['line_strong'])
+    legend = ax.legend(loc='upper left', fontsize=7.5, framealpha=0.85,
+                       facecolor=palette['surface'], edgecolor=palette['line_strong'])
+    for text in legend.get_texts():
+        text.set_color(palette['text'])
+    ax.grid(color=palette['line_strong'], alpha=0.6)
     fig.tight_layout()
     return fig, metrics
 
@@ -110,10 +148,11 @@ def render_guide() -> None:
             3. 賭けたい **掛け金** を入力します。
 
             **見方**
-            - **期待値** … 掛け金 × オッズ × 的中確率。下の差分が＋なら期待値プラスです。
+            - **期待回収率** … 期待値 ÷ 掛け金 × 100。一覧はこの高い順に並びます。
+              バーの中央の縦線が100%（損益分岐）で、これを超えると緑色になります。
+            - **期待値** … 掛け金 × オッズ × 的中確率。掛け金を上回れば期待値プラスです。
             - **損益分岐オッズ** … 期待値が掛け金とちょうど等しくなる理論上の公正オッズ。
-            - **妙味判定** … 入力オッズが損益分岐オッズを上回れば「妙味あり（割安）」と判定します。
-            - **妙味ランキング** … 全馬券を期待回収率の高い順に並べ、最も妙味のある馬券を表示します。
+            - **妙味判定** … 入力オッズが損益分岐オッズを上回れば「◎ 割安」と判定します。
 
             **計算方法**
             - 「全馬の実力が互角で着順は完全にランダム」と仮定し、
@@ -132,6 +171,9 @@ def render_guide() -> None:
     with st.expander('🆕 更新内容', expanded=False):
         st.markdown(
             """
+            - **2026/08/24** スマートフォン向けにレイアウトを刷新しました。式別を
+              期待回収率の高い順に縦1列で並べ、オッズなどの入力欄を画面上部に
+              固定しています（従来は3列表示のため、スマホでは数値が折り返していました）。
             - **2026/08/19** アプリ名を「馬券バリューチェッカー」に変更しました。
             - **2026/08/18** 馬メモ（評価印・メモ）のタブを追加。1〜18番に◎◯△▲✕？を付けてCSV出力できます。
             - **2026/08/11** 的中確率の計算を見直しました。表示される確率・期待値・
@@ -157,27 +199,37 @@ def render_guide() -> None:
 
 
 def render_inputs() -> tuple[float, int, int]:
-    """オッズ・出走頭数・掛け金の入力欄を描画し、入力値を返す。"""
-    odds = st.number_input(
-        'オッズ', value=1.00, min_value=1.00, step=0.10,
-        help='検討したい馬券のオッズ（払戻倍率）を入力してください。',
-    )
-    horses = st.number_input(
-        '馬数', format='%d', value=baken.MAX_FIELD_SIZE,
-        min_value=baken.MIN_FIELD_SIZE, max_value=baken.MAX_FIELD_SIZE,
-        help='そのレースに出走する頭数です。',
-    )
-    bet = st.number_input(
-        '掛け金', format='%d', value=100, min_value=100, step=100,
-        help='1点あたりに賭ける金額（円）です。',
-    )
+    """オッズ・出走頭数・掛け金の入力欄を、画面上部に固定した3列で描画する。
+
+    列の1つ目に置いた目印をCSSが見つけて、この横並びブロックだけを固定する。
+    """
+    odds_col, horses_col, bet_col = st.columns(3)
+
+    with odds_col:
+        theme.sticky_anchor()
+        odds = st.number_input(
+            'オッズ', value=DEFAULT_ODDS, min_value=1.00, step=0.10,
+            help='検討したい馬券のオッズ（払戻倍率）を入力してください。',
+        )
+    with horses_col:
+        horses = st.number_input(
+            '頭数', format='%d', value=baken.MAX_FIELD_SIZE,
+            min_value=baken.MIN_FIELD_SIZE, max_value=baken.MAX_FIELD_SIZE,
+            help='そのレースに出走する頭数です。',
+        )
+    with bet_col:
+        bet = st.number_input(
+            '掛け金', format='%d', value=100, min_value=100, step=100,
+            help='1点あたりに賭ける金額（円）です。',
+        )
     return odds, horses, bet
 
 
 def render_ranking(results: list[baken.BakenMetrics]) -> None:
-    """期待回収率の高い順に全式別を比較する。"""
-    st.subheader('💡 妙味ランキング')
+    """期待回収率の高い順に全式別を縦1列で比較する。"""
     ranked = sorted(results, key=lambda m: m.payout_rate, reverse=True)
+
+    st.markdown(summary_html(ranked), unsafe_allow_html=True)
 
     best = ranked[0]
     if best.is_value:
@@ -191,13 +243,15 @@ def render_ranking(results: list[baken.BakenMetrics]) -> None:
             f'「{best.name}」（{best.payout_rate:.1f}%）ですが、いずれも100%を下回ります。'
         )
 
-    st.dataframe(ranking_table(ranked), hide_index=True, use_container_width=True)
-    st.caption('※ 期待回収率 = 期待値 ÷ 掛け金 × 100。100%を超えるほど妙味があります。')
+    st.markdown(ranking_rows_html(ranked), unsafe_allow_html=True)
+    st.caption('※ バーの中央の縦線が期待回収率100%（損益分岐）です。')
+
+    with st.expander('📋 数値を表で見る', expanded=False):
+        st.dataframe(ranking_table(ranked), hide_index=True, use_container_width=True)
 
 
 def render_chart_tab(odds: float, bet: int, horses: int) -> None:
     """損益分岐グラフのタブを描画する。"""
-    st.subheader('📈 損益分岐グラフ')
     st.caption('馬券種を選ぶと、「オッズが何倍を超えれば利益（期待値プラス）になるか」を可視化します。')
 
     name = st.selectbox('馬券種を選択', baken.available_bet_types(horses), key='graph_baken')
@@ -212,7 +266,6 @@ def render_chart_tab(odds: float, bet: int, horses: int) -> None:
 
 def render_memo_tab() -> None:
     """1〜18番の各馬に評価印とメモを記入できるメモ機能のタブを描画する。"""
-    st.subheader('📝 馬メモ')
     st.caption(
         '各馬（1〜18番）に評価印（◎◯△▲✕？）とメモを記入できます。'
         '印は選択式で自由入力はできません。「表をリセット」で全消去、「CSV出力」で書き出せます。'
@@ -267,31 +320,21 @@ def main() -> None:
     st.set_page_config(
         page_title='馬券バリューチェッカー',
         page_icon='uma_icon.png',
-        initial_sidebar_state='expanded',
-        layout='wide',
+        initial_sidebar_state='collapsed',
+        layout='centered',
     )
+    theme.inject()
 
     st.title('馬券バリューチェッカー')
-    st.caption(
-        'オッズ・出馬数・掛け金を入力すると、馬券の種類ごとに期待値と'
-        '「妙味（割安かどうか）」を計算します。'
-    )
+    st.caption('オッズ・頭数・掛け金を入れると、どの馬券が割安かを期待回収率の順に並べます。')
 
-    render_guide()
-    affiliates.render_text_links()
-
-    st.write('---')
     odds, horses, bet = render_inputs()
-    st.write('---')
-
     results = baken.calculate_all(odds, bet, horses)
 
     calc_tab, chart_tab, memo_tab = st.tabs(
         ['📊 期待値計算', '📈 損益分岐グラフ', '📝 馬メモ']
     )
     with calc_tab:
-        render_metric_grid(results, bet)
-        st.write('---')
         render_ranking(results)
     with chart_tab:
         render_chart_tab(odds, bet, horses)
@@ -299,11 +342,16 @@ def main() -> None:
         render_memo_tab()
 
     st.write('---')
-    affiliates.render_banners()
+    render_guide()
+    affiliates.render_text_links()
+
+    # 広告はスマホでは横に3列並べられないため、1列にして折りたたむ
+    with st.expander('🎁 PR・関連サービス', expanded=False):
+        affiliates.render_banners(columns=1)
+        affiliates.render_closing_banner()
 
     st.write('---')
     render_footer()
-    affiliates.render_closing_banner()
 
 
 if __name__ == '__main__':
