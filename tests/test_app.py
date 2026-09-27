@@ -26,7 +26,7 @@ def run_app(odds=None, horses=None, bet=None) -> AppTest:
 
 def test_初期表示で例外が出ない():
     app = run_app()
-    assert app.title[0].value == '馬券バリューチェッカー'
+    assert app.title[0].value == '競馬期待値計算サイト'
 
 
 @pytest.mark.parametrize('horses', range(baken.MIN_FIELD_SIZE, baken.MAX_FIELD_SIZE + 1))
@@ -74,6 +74,22 @@ def test_低オッズなら妙味なしと案内される():
     assert any('妙味のある馬券はありません' in msg.value for msg in app.info)
 
 
-def test_グラフタブの選択肢は発売される式別だけ():
-    app = run_app(horses=8)
-    assert app.selectbox[0].options == baken.available_bet_types(8)
+def test_期待値計算だけの1画面でタブはない():
+    app = run_app()
+    assert len(app.tabs) == 0
+    assert len(app.selectbox) == 0  # 損益分岐グラフの式別選択
+    assert len(app.button) == 0  # 馬メモのリセットボタン
+
+
+def test_PR欄は更新内容のすぐ下に並ぶ():
+    app = run_app()
+    # 間にテキストリンクなどが挟まらないよう、ページ直下の全要素の並びで確かめる
+    labels = [getattr(node, 'label', None) for node in app.main.children.values()]
+    assert labels.index('🎁 PR・関連サービス') == labels.index('🆕 更新内容') + 1
+
+
+def test_テキストリンクはPR欄の中にある():
+    app = run_app()
+    pr_section = next(e for e in app.expander if e.label == '🎁 PR・関連サービス')
+    links = '\n'.join(md.value for md in pr_section.markdown)
+    assert 'JRA公式サイト' in links
