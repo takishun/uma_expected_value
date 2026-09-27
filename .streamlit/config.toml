@@ -1,5 +1,5 @@
 # 案A「オッズ掲示板」のダーク基調に合わせたテーマ設定。
-# oz_cal.py の inject_styles() が使う色と対応させている。
+# theme.py の CSS 変数（:root）の色と対応させている。
 [theme]
 base = "dark"
 primaryColor = "#7FD09B"

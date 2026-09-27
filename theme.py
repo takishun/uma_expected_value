@@ -9,27 +9,12 @@ Streamlitの標準部品だけでは行カードを表現できないため、CS
 
 import streamlit as st
 
-# 案Aの配色。値を変えるときは .streamlit/config.toml のテーマも合わせて更新する。
-PALETTE = {
-    'bg': '#0D110C',  # 画面全体の地
-    'surface': '#171E16',  # 入力欄・補助パネル
-    'card': '#141A13',  # 式別カード（妙味なし）
-    'card_good': '#131E16',  # 式別カード（妙味あり）
-    'line': '#212A20',  # 罫線
-    'line_strong': '#263024',  # やや強い罫線
-    'muted': '#7C8A76',  # 補助テキスト
-    'text': '#E3E8DE',  # 本文
-    'amber': '#F2C755',  # 入力値（オッズ表示板の琥珀色）
-    'green': '#7FD09B',  # 妙味ありの数値
-    'bar': '#4FA96F',  # 妙味ありのバー
-    'bar_dim': '#47604A',  # 妙味なしのバー
-    'track': '#232C21',  # バーの下地
-}
-
 # 期待回収率をバーの長さに変換するときの上限(%)。
 # トラックの中央(50%)がちょうど回収率100%＝損益分岐になる。
 BAR_FULL_SCALE = 200.0
 
+# 案Aの配色は :root のCSS変数にまとめている。
+# 値を変えるときは .streamlit/config.toml のテーマも合わせて更新する。
 _CSS = """
 <style>
 :root {
@@ -235,12 +220,7 @@ div[data-testid="stHorizontalBlock"]:has(span.ev-sticky-anchor) input {
   background: #6E7C68;
 }
 
-/* ---------- タブ ---------- */
-button[data-baseweb="tab"] { padding-left: 0.6rem; padding-right: 0.6rem; }
-button[data-baseweb="tab"] p { font-size: 0.85rem !important; }
 @media (max-width: 360px) {
-  button[data-baseweb="tab"] { padding-left: 0.35rem; padding-right: 0.35rem; }
-  button[data-baseweb="tab"] p { font-size: 0.76rem !important; }
   .ev-meta { font-size: 0.62rem; }
 }
 
