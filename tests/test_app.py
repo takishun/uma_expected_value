@@ -84,12 +84,15 @@ def test_期待値計算だけの1画面でタブはない():
 def test_PR欄は更新内容のすぐ下に並ぶ():
     app = run_app()
     # 間にテキストリンクなどが挟まらないよう、ページ直下の全要素の並びで確かめる
-    labels = [getattr(node, 'label', None) for node in app.main.children.values()]
-    assert labels.index('🎁 PR・関連サービス') == labels.index('🆕 更新内容') + 1
+    nodes = list(app.main.children.values())
+    labels = [getattr(node, 'label', None) for node in nodes]
+    pr_index = next(i for i, node in enumerate(nodes)
+                    if getattr(node, 'value', None) == '🎁 PR・関連サービス')
+    assert pr_index == labels.index('🆕 更新内容') + 1
 
 
-def test_テキストリンクはPR欄の中にある():
+def test_PR欄は折りたたまずに常に表示する():
     app = run_app()
-    pr_section = next(e for e in app.expander if e.label == '🎁 PR・関連サービス')
-    links = '\n'.join(md.value for md in pr_section.markdown)
+    assert all(e.label != '🎁 PR・関連サービス' for e in app.expander)
+    links = '\n'.join(md.value for md in app.markdown)
     assert 'JRA公式サイト' in links

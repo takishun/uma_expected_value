@@ -223,11 +223,11 @@ def main() -> None:
     st.write('---')
     render_guide()
 
-    # 更新内容のすぐ下に置く。広告はスマホでは横に3列並べられないため、1列にして折りたたむ
-    with st.expander('🎁 PR・関連サービス', expanded=False):
-        affiliates.render_text_links()
-        affiliates.render_banners(columns=1)
-        affiliates.render_closing_banner()
+    # 更新内容のすぐ下に置く。常に表示し、スマホでも収まるよう2列に並べる
+    st.subheader('🎁 PR・関連サービス')
+    affiliates.render_text_links()
+    affiliates.render_banners(columns=2)
+    affiliates.render_closing_banner()
 
     st.write('---')
     render_footer()
